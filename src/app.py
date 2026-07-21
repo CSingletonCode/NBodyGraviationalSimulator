@@ -1,29 +1,49 @@
 import pygame
 import moderngl
 import sys
+from ui import UI
 
 class App:
-    def run(self):
+    def __init__(self):
         pygame.init()
 
-        info = pygame.display.Info()
-        width, height = info.current_w, info.current_h
+        #Window Size Attributes
+        self.info = pygame.display.Info()
+        self.width, self.height = self.info.current_w, self.info.current_h
+        self.screen = pygame.display.set_mode((self.width, self.height), pygame.OPENGL | pygame.DOUBLEBUF)
 
-        screen = pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF)
         pygame.display.set_caption("Orbit Model")
-        context = moderngl.create_context()
-        context.viewport = (0, 0, width, height)
 
-        clock = pygame.time.Clock()
-#Test Comment
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-            context.clear(1, 1, 1)
+        #ModernGL Features
+        self.context = moderngl.create_context()
+        self.context.viewport = (0, 0, self.width, self.height)
+
+        #Timing Attributes
+        self.running = True
+        self.clock = pygame.time.Clock()
+
+        #self.renderer
+        #self.simulation
+        self.ui = UI(self.context)
+
+    def run(self):
+        while self.running:
+            self.handleEvents()
+            self.context.clear(0.6, 0.6, 0.6)
+            self.ui.render()
             pygame.display.flip()
-            clock.tick(60)
+            self.clock.tick(60)
 
         pygame.quit()
+
+    def handleEvents(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+
+            self.ui.handle_event(event)
+
+#Closes the window -- Remove Self If No Changes Are Made Later
+    def close(self):
+        pygame.quit()
+        sys.exit()
