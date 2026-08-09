@@ -31,7 +31,7 @@ if __name__ == "__main__":
 # │
 # ├── ui/
 # │   ├── __init__.py
-# │   ├── ui.py
+# │   ├── ui_manager.py
 # │   ├── button.py
 # │   ├── panel.py
 # │   ├── slider.py
