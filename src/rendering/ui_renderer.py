@@ -51,4 +51,6 @@ class UIRenderer():
         self.program["border_colour"].value = element.border_colour
         self.program["border_size"].value = element.border_size
 
+        self.program["enable_shadow"].value = element.enable_shadow
+
         self.vao.render()

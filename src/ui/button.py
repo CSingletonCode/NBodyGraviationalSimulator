@@ -2,8 +2,8 @@ import pygame as pg
 from ui.element import Element
 
 class Button(Element):
-    def __init__(self, position, size, purpose, colour, border_colour, label, corner_radius, border_size):
-        super().__init__(position, size, colour, border_colour, corner_radius, border_size)
+    def __init__(self, position, size, purpose, colour, border_colour, label, corner_radius, border_size, enable_shadow):
+        super().__init__(position, size, colour, border_colour, corner_radius, border_size, enable_shadow)
         self.purpose = purpose
         self.label = label
 

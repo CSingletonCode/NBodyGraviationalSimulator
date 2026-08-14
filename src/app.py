@@ -38,7 +38,7 @@ class App:
             self.handleEvents()
             mouse_position = pygame.mouse.get_pos()
             self.manager.update_elements(mouse_position)
-            self.context.clear(0.6, 0.6, 0.6)
+            self.context.clear(0.8, 0.8, 0.8)
             self.manager.render(self.renderer)
             pygame.display.flip()
             self.clock.tick(60)

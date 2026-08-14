@@ -16,8 +16,8 @@ class Manager:
             border_colour=(0, 0, 0, 1),
             label="Button 1",
             corner_radius=40,
-            border_size=20
-
+            border_size=20,
+            enable_shadow=True
         )
 
         button2 = Button(
@@ -28,7 +28,8 @@ class Manager:
             border_colour=(1, 1, 1, 1),
             label="Button 2",
             corner_radius=50,
-            border_size=5
+            border_size=5,
+            enable_shadow=True
         )
 
         self.elements.append(button1)

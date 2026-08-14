@@ -1,7 +1,7 @@
 import pygame as pg
 
 class Element:
-    def __init__(self, position, size, colour, border_colour, corner_radius, border_size):
+    def __init__(self, position, size, colour, border_colour, corner_radius, border_size, enable_shadow):
         self.position = position # Positioned from top left corner
         self.size = size
         self.colour = colour
@@ -9,6 +9,7 @@ class Element:
         self.corner_radius = corner_radius
         self.border_size = border_size
         self.rect = pg.Rect(position[0], position[1], size[0], size[1])
+        self.enable_shadow = enable_shadow
 
         self.visible = True
         self.enabled = True
