@@ -1,11 +1,18 @@
 import numpy as np
+import pygame
+import moderngl
 from pathlib import Path
 
 class UIRenderer():
     def __init__(self, context, screen_size):
-        self.program = None
+        self.ui_program = None
+        self.text_program = None
         self.context = context
         self.screen_size = screen_size
+        self.font = pygame.font.SysFont("Arial", 20, bold=True)
+
+        pygame.font.init()
+
 
         self.shade()
         self.make_geometry()
@@ -19,10 +26,14 @@ class UIRenderer():
         with open(shader_directory / "ui_fragment.glsl") as file:
             fragment_shader = file.read()
 
-        self.program = self.context.program(
-            vertex_shader = vertex_shader,
-            fragment_shader = fragment_shader
-        )
+        with open(shader_directory / "text_vertex.glsl") as file:
+            text_vertex = file.read()
+
+        with open(shader_directory / "text_fragment.glsl") as file:
+            text_fragment = file.read()
+
+        self.ui_program = self.context.program(vertex_shader = vertex_shader, fragment_shader = fragment_shader)
+        self.text_program = self.context.program(vertex_shader=text_vertex, fragment_shader=text_fragment)
 
     def make_geometry(self):
         vertices = np.array(
@@ -38,19 +49,22 @@ class UIRenderer():
             dtype="f4"
         )
 
-        self.vbo = self.context.buffer(vertices.tobytes())
-        self.vao = self.context.simple_vertex_array(self.program, self.vbo, "base_position")
+        self.ui_vbo = self.context.buffer(vertices.tobytes())
+        self.ui_vao = self.context.simple_vertex_array(self.ui_program, self.ui_vbo, "base_position")
 
-    def draw_element(self, element):
-        self.program["position"].value = element.position
-        self.program["size"].value = element.size
-        self.program["screen_size"].value = self.screen_size
+        # 2. Text Geometry (X, Y, U, V) - Adds texture mapping coordinates
+        text_vertices = np.array(
+            [
+                # X,    Y,      U,   V (Texture Coordinates)
+                -0.5, -0.5,     0.0, 0.0,
+                0.5, -0.5,      1.0, 0.0,
+                0.5, 0.5,       1.0, 1.0,
 
-        self.program["colour"].value = element.colour
-        self.program["radius"].value = element.corner_radius
-        self.program["border_colour"].value = element.border_colour
-        self.program["border_size"].value = element.border_size
-
-        self.program["enable_shadow"].value = element.enable_shadow
-
-        self.vao.render()
+                -0.5, -0.5,     0.0, 0.0,
+                0.5, 0.5,       1.0, 1.0,
+                -0.5, 0.5,      0.0, 1.0
+            ],
+            dtype="f4"
+        )
+        self.text_vbo = self.context.buffer(text_vertices.tobytes())
+        self.text_vao = self.context.simple_vertex_array(self.text_program, self.text_vbo, "base_position", "in_uv")

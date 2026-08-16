@@ -10,6 +10,7 @@ class Element:
         self.border_size = border_size
         self.rect = pg.Rect(position[0], position[1], size[0], size[1])
         self.enable_shadow = enable_shadow
+        self.text_texture = None
 
         self.visible = True
         self.enabled = True

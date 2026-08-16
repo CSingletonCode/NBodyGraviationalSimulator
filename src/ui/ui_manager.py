@@ -15,6 +15,7 @@ class Manager:
             colour=(0.2, 0.6, 1.0, 1.0),
             border_colour=(0, 0, 0, 1),
             label="Button 1",
+            label_colour=(0,0,0),
             corner_radius=40,
             border_size=20,
             enable_shadow=True
@@ -27,6 +28,7 @@ class Manager:
             colour=(1.0, 0.3, 0.3, 1.0),
             border_colour=(1, 1, 1, 1),
             label="Button 2",
+            label_colour=(0, 0, 0),
             corner_radius=50,
             border_size=5,
             enable_shadow=True
@@ -51,4 +53,4 @@ class Manager:
     def render(self, renderer):
         for element in self.elements:
             if element.visible:
-                renderer.draw_element(element)
+                element.draw(renderer)

@@ -8,6 +8,8 @@ uniform vec2 size;
 uniform float radius;
 uniform vec2 screen_size;
 uniform bool enable_shadow;
+uniform vec2 shadow_offset;
+uniform float shadow_blur;
 
 out vec4 frag_colour;
 
@@ -52,8 +54,6 @@ void main()
 
     if (enable_shadow)
     {
-        vec2 shadow_offset = vec2(0.0, 4.0); // Pushes the shadow down
-        float shadow_blur = 8.0;  // the softness of the shadow
         vec4 shadow_colour = vec4(0.0, 0.0, 0.0, 0.5);
         vec2 shadow_position = relative_position - shadow_offset;
         // rounds the shadow like the shape
