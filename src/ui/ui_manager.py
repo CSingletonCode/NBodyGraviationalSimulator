@@ -34,10 +34,6 @@ class Manager:
         self.elements.append(self.control_panel.panel)
         self.elements.append(self.show_controls_button)
 
-    def quit(self):
-        pg.quit()
-        sys.exit()
-
     def update_elements(self, mouse_position):
         for element in self.elements:
             element.update(mouse_position)

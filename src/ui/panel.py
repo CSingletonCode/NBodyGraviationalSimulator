@@ -1,6 +1,5 @@
 from ui.element import Element
 import pygame as pg
-import moderngl
 
 
 class Panel(Element):
