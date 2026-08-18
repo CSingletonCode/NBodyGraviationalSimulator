@@ -3,14 +3,13 @@ import moderngl
 import sys
 from ui import ui_manager
 from rendering import ui_renderer
+from ui.constants import *
 
 class App:
     def __init__(self):
-        pygame.init()
-
         #Screen Size
-        self.info = pygame.display.Info()
-        self.width, self.height = self.info.current_w, self.info.current_h
+
+        self.width, self.height = ACTIVE_RESOLUTION.current_w, ACTIVE_RESOLUTION.current_h
         self.screen = pygame.display.set_mode((self.width, self.height), pygame.OPENGL | pygame.DOUBLEBUF)
 
         pygame.display.set_caption("Orbit Model")
@@ -29,7 +28,7 @@ class App:
         self.running = True
         self.clock = pygame.time.Clock()
 
-        self.manager = ui_manager.Manager()
+        self.manager = ui_manager.Manager((self.width, self.height))
         self.renderer = ui_renderer.UIRenderer(self.context, (self.width, self.height))
         #self.simulation
 
@@ -38,12 +37,13 @@ class App:
             self.handleEvents()
             mouse_position = pygame.mouse.get_pos()
             self.manager.update_elements(mouse_position)
-            self.context.clear(0.8, 0.8, 0.8)
+            self.context.clear(1,1,1)
             self.manager.render(self.renderer)
             pygame.display.flip()
             self.clock.tick(60)
 
         pygame.quit()
+        sys.exit()
 
     def handleEvents(self):
         for event in pygame.event.get():

@@ -1,14 +1,20 @@
 import pygame as pg
 
+from ui.constants import *
+
+
 class Element:
     def __init__(self, position, size, colour, border_colour, corner_radius, border_size, enable_shadow):
-        self.position = position # Positioned from top left corner
-        self.size = size
+        # Positioned from top left corner
+        self.position = ((position[0]/REFERENCE_RESOLUTION[0])*ACTIVE_RESOLUTION.current_w,
+                        (position[1]/REFERENCE_RESOLUTION[1])*ACTIVE_RESOLUTION.current_h)
+        self.size = ((size[0]/REFERENCE_RESOLUTION[0])*ACTIVE_RESOLUTION.current_w,
+                     (size[1]/REFERENCE_RESOLUTION[1])*ACTIVE_RESOLUTION.current_h)
         self.colour = colour
         self.border_colour = border_colour
         self.corner_radius = corner_radius
         self.border_size = border_size
-        self.rect = pg.Rect(position[0], position[1], size[0], size[1])
+        self.rect = pg.Rect(self.position[0], self.position[1], self.size[0], self.size[1])
         self.enable_shadow = enable_shadow
         self.text_texture = None
 
@@ -26,3 +32,11 @@ class Element:
     @property
     def interactable(self):
         return self.visible and self.enabled
+
+    def disable(self):
+        self.visible = False
+        self.enabled = False
+
+    def enable(self):
+        self.enabled = True
+        self.visible = True

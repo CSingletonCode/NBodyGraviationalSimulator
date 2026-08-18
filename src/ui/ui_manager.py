@@ -1,46 +1,42 @@
+import sys
+import pygame as pg
+
 from .button import Button
+from .control_panel import ControlPanel
+from .panel import Panel
+from assets.colours import *
 
 class Manager:
-    def __init__(self):
+    def __init__(self, screen_size):
         self.elements = []
+        self.screen_size = screen_size
 
         self.create_ui()
 
     def create_ui(self):
-
-        button1 = Button(
-            position=(100, 100),
-            size=(200, 80),
-            purpose=self.button_one_pressed,
-            colour=(0.2, 0.6, 1.0, 1.0),
-            border_colour=(0, 0, 0, 1),
-            label="Button 1",
-            label_colour=(0,0,0),
-            corner_radius=40,
-            border_size=20,
+        self.show_controls_button = Button(
+            position=(2390, 20),
+            size=(150, 60),
+            purpose=None,
+            colour=(1.0, 1.0, 1.0, 1.0),
+            border_colour=(0, 0, 0, 1.0),
+            corner_radius=7,
+            border_size=2,
+            label="Show Controls",
+            label_colour=(0, 0, 0, 1.0),
             enable_shadow=True
         )
 
-        button2 = Button(
-            position=(100, 220),
-            size=(200, 80),
-            purpose=self.button_two_pressed,
-            colour=(1.0, 0.3, 0.3, 1.0),
-            border_colour=(1, 1, 1, 1),
-            label="Button 2",
-            label_colour=(0, 0, 0),
-            corner_radius=50,
-            border_size=5,
-            enable_shadow=True
-        )
+        self.control_panel = ControlPanel(self.show_controls_button)
+        self.show_controls_button.purpose = self.control_panel.show_controls
+        self.show_controls_button.disable()
 
-        self.elements.append(button1)
-        self.elements.append(button2)
+        self.elements.append(self.control_panel.panel)
+        self.elements.append(self.show_controls_button)
 
-    def button_one_pressed(self):
-        print("Button 1 pressed")
-    def button_two_pressed(self):
-        print("Button 2 pressed")
+    def quit(self):
+        pg.quit()
+        sys.exit()
 
     def update_elements(self, mouse_position):
         for element in self.elements:

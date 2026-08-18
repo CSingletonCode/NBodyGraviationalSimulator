@@ -1,5 +1,5 @@
 import numpy as np
-import pygame
+import pygame as pg
 import moderngl
 from pathlib import Path
 
@@ -9,9 +9,9 @@ class UIRenderer():
         self.text_program = None
         self.context = context
         self.screen_size = screen_size
-        self.font = pygame.font.SysFont("Arial", 20, bold=True)
+        self.font = pg.font.SysFont("Arial", 20, bold=True)
 
-        pygame.font.init()
+        pg.font.init()
 
 
         self.shade()
@@ -68,3 +68,47 @@ class UIRenderer():
         )
         self.text_vbo = self.context.buffer(text_vertices.tobytes())
         self.text_vao = self.context.simple_vertex_array(self.text_program, self.text_vbo, "base_position", "in_uv")
+
+    def draw_basics(self, element):
+        element.offset = 3.0 if element.pressed else 0.0
+
+        self.ui_program["position"].value = (element.position[0], element.position[1] + element.offset)
+        self.ui_program["size"].value = element.size
+        self.ui_program["screen_size"].value = self.screen_size
+
+        self.ui_program["colour"].value = element.colour
+        self.ui_program["border_colour"].value = element.border_colour
+        self.ui_program["radius"].value = element.corner_radius
+        self.ui_program["border_size"].value = element.border_size
+
+        self.ui_program["enable_shadow"].value = element.enable_shadow
+        if  element.enable_shadow:
+            if element.pressed:
+                self.ui_program["shadow_offset"].value = (0.0, 2.0)
+                self.ui_program["shadow_blur"].value = 4.0
+            else:
+                self.ui_program["shadow_offset"].value = (0.0, 4.0)
+                self.ui_program["shadow_blur"].value = 8.0
+
+        self.ui_vao.render()
+
+    def draw_text(self, element):
+        if element.label is not None:
+            if element.text_texture is None:
+                text = element.font.render(element.label, True, element.label_colour)
+                element.text_size = text.get_size()
+                pixel_data = pg.image.tobytes(text, "RGBA")
+                element.text_texture = self.context.texture(element.text_size, 4, pixel_data)
+                element.text_texture.filter = (moderngl.LINEAR, moderngl.LINEAR)
+
+            text_x = element.position[0] + (element.size[0] - element.text_size[0]) * 0.5
+            text_y = element.position[1] + (element.size[1] - element.text_size[1]) * 0.5
+
+            self.text_program["position"].value = text_x, text_y + element.offset
+            self.text_program["size"].value = element.text_size
+            self.text_program["screen_size"].value = self.screen_size
+
+            element.text_texture.use(0)
+            self.text_program["text_texture"].value = 0
+
+            self.text_vao.render()
