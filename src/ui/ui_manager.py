@@ -1,9 +1,6 @@
-import sys
-import pygame as pg
-
 from .button import Button
 from .control_panel import ControlPanel
-from .panel import Panel
+from .new_body_panel import NewBodyPanel
 from assets.colours import *
 
 class Manager:
@@ -30,6 +27,9 @@ class Manager:
         self.control_panel = ControlPanel(self.show_controls_button)
         self.show_controls_button.purpose = self.control_panel.show_controls
         self.show_controls_button.disable()
+
+        self.new_body_panel = NewBodyPanel()
+        self.elements.append(self.new_body_panel.panel)
 
         self.elements.append(self.control_panel.panel)
         self.elements.append(self.show_controls_button)
