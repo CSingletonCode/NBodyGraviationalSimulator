@@ -70,7 +70,7 @@ class UIRenderer():
         self.text_vao = self.context.simple_vertex_array(self.text_program, self.text_vbo, "base_position", "in_uv")
 
     def draw_basics(self, element):
-        element.offset = 3.0 if element.pressed else 0.0
+        element.offset = 3.0 if element.pressed and element.press_drop else 0.0
 
         self.ui_program["position"].value = (element.position[0], element.position[1] + element.offset)
         self.ui_program["size"].value = element.size
@@ -83,7 +83,7 @@ class UIRenderer():
 
         self.ui_program["enable_shadow"].value = element.enable_shadow
         if  element.enable_shadow:
-            if element.pressed:
+            if element.pressed and element.press_drop:
                 self.ui_program["shadow_offset"].value = (0.0, 2.0)
                 self.ui_program["shadow_blur"].value = 4.0
             else:
@@ -96,9 +96,13 @@ class UIRenderer():
         if element.label is not None:
             if element.text_texture is None:
                 text = element.font.render(element.label, True, element.label_colour)
-                element.text_size = text.get_size()
-                pixel_data = pg.image.tobytes(text, "RGBA")
+                extended = pg.Surface((text.get_width(), text.get_height()+4), pg.SRCALPHA)
+                extended.blit(text, (0, 0))
+                element.text_size = extended.get_size()
+                pixel_data = pg.image.tobytes(extended, "RGBA")
                 element.text_texture = self.context.texture(element.text_size, 4, pixel_data)
+                element.text_texture.repeat_x = False
+                element.text_texture.repeat_y = False
                 element.text_texture.filter = (moderngl.LINEAR, moderngl.LINEAR)
 
             text_x = element.position[0] + (element.size[0] - element.text_size[0]) * 0.5

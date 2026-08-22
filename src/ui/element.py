@@ -17,10 +17,9 @@ class Element:
         self.rect = pg.Rect(self.position[0], self.position[1], self.size[0], self.size[1])
         self.enable_shadow = enable_shadow
         self.text_texture = None
-
+        self.press_drop = False
         self.visible = True
         self.enabled = True
-
         self.hovered = False
 
     def update(self, mouse_position):

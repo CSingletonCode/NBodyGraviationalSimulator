@@ -10,16 +10,16 @@ class Button(Element):
         self.pressed = False
         self.font = pg.font.SysFont("Arial", 20, bold=True)
         self.label_colour = label_colour
+        self.press_drop = True
 
     def update(self, mouse_position):
         if not self.enabled:
             self.hovered = False
             return
-
         self.hovered = self.rect.collidepoint(mouse_position)
 
     def handle_event(self, event):
-        if self.enabled:
+        if self.enabled and self.purpose is not None:
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1 and self.hovered:
                     self.pressed = True

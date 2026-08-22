@@ -50,8 +50,6 @@ void main()
     float outer_edge = fwidth(outer_dist);
     float alpha = 1.0 - smoothstep(-outer_edge, outer_edge, outer_dist);
 
-    //if (alpha <= 0.0) {discard;} // Ignores pixels that are completely invisible to the button (outside it)
-
     if (enable_shadow)
     {
         vec4 shadow_colour = vec4(0.0, 0.0, 0.0, 0.5);

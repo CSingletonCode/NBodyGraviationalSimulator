@@ -29,12 +29,14 @@ class Panel(Element):
         for element in self.contains:
             element.update(mouse_position)
 
-    def handle_event(self, event):
-        for element in self.contains:
-            element.handle_event(event)
+    # def handle_event(self, event):
+    #     # for element in self.contains:
+    #     #     element.handle_event(event)
+    #     pass
 
     def draw(self, renderer):
         renderer.draw_basics(self)
         renderer.draw_text(self)
         for element in self.contains:
             element.draw(renderer)
+

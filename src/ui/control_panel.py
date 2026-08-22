@@ -37,7 +37,7 @@ class ControlPanel:
                                       label_colour=(0, 0, 0, 1.0), enable_shadow=True)
         self.panel.add_element(self.speed_button)
 
-        self.new_body_button = Button(position=(1990, 90), size=(150, 60), purpose=self.new_body, colour=(1.0, 1.0, 1.0, 1.0),
+        self.new_body_button = Button(position=(1990, 90), size=(150, 60), purpose=None, colour=(1.0, 1.0, 1.0, 1.0),
                                       border_colour=(0, 0, 0, 1.0), corner_radius=7, border_size=2, label="New Body",
                                       label_colour=(0, 0, 0, 1.0), enable_shadow=True)
         self.panel.add_element(self.new_body_button)
@@ -90,8 +90,6 @@ class ControlPanel:
     def wipe(self):
         pass
 
-    def new_body(self):
-        pass
 
     def list_bodies(self):
         pass
