@@ -9,7 +9,7 @@ class Button(Element):
         self.text_texture = None
         self.pressed = False
         self.font = pg.font.SysFont("Arial", 20, bold=True)
-        self.label_colour = label_colour
+        self.label_colour = tuple(255*c for c in label_colour)
         self.press_drop = True
 
     def update(self, mouse_position):

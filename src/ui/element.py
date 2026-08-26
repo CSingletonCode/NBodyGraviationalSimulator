@@ -39,3 +39,9 @@ class Element:
     def enable(self):
         self.enabled = True
         self.visible = True
+
+    def freeze(self):
+        self.enabled = False
+
+    def unfreeze(self):
+        self.enabled = True

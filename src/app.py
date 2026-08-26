@@ -4,6 +4,7 @@ import sys
 from ui import ui_manager
 from rendering import ui_renderer
 from ui.constants import *
+from assets. colours import DARKBLUE
 
 class App:
     def __init__(self):
@@ -37,7 +38,7 @@ class App:
             self.handleEvents()
             mouse_position = pygame.mouse.get_pos()
             self.manager.update_elements(mouse_position)
-            self.context.clear(1,1,1)
+            self.context.clear(*DARKBLUE)
             self.manager.render(self.renderer)
             pygame.display.flip()
             self.clock.tick(60)

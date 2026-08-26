@@ -3,10 +3,10 @@ import pygame as pg
 
 
 class TextBox(Element):
-    def __init__(self, position, size, colour, border_colour, label_colour, corner_radius, border_size, enable_shadow, writable, label=""):
+    def __init__(self, position, size, colour, border_colour, label_colour, corner_radius, border_size,  writable, enable_shadow=False, label=""):
         super().__init__(position, size, colour, border_colour, corner_radius, border_size, enable_shadow)
         self.label = label
-        self.label_colour = label_colour
+        self.label_colour = tuple(255*c for c in label_colour)
         self.writable = writable
         self.font_name = "Arial"
         self.label_size = 20
