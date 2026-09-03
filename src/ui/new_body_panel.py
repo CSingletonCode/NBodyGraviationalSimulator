@@ -3,17 +3,17 @@ from ui.panel import Panel
 from ui.textbox import TextBox
 from assets.colours import *
 
-
 class NewBodyPanel:
-    def __init__(self, unfreeze_controls, invalid_data):
+    def __init__(self, unfreeze_controls, invalid_data, simulation):
         self.unfreeze_controls = unfreeze_controls
-        self.panel = Panel(position=(640, 10), size=(1280, 300), colour=(*SILVER, 1.0),
+        self.panel = Panel(position=(640, 10), size=(1280, 372), colour=(*SILVER, 1.0),
                         border_colour=(*CYAN, 1.0), corner_radius=10, border_size=5)
         self.standard_data_boxes = []
         self.position_boxes = None
         self.velocity_boxes = None
         self.tilt_boxes = None
         self.invalid_data = invalid_data
+        self.simulation = simulation
         self.add_features()
 
 
@@ -155,15 +155,44 @@ class NewBodyPanel:
         self.panel.add_element(self.tilt_z)
         self.tilt_boxes = (self.tilt_x, self.tilt_y, self.tilt_z)
 
+        # Colour
+
+        self.colour_label = TextBox(position=(1470, 236), size=(410, 20), colour=(*SILVER, 1.0),
+                                  border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
+                                  label_colour=(*BLACK, 1.0), writable=False, label="Colour (0 - 1):")
+        self.panel.add_element(self.colour_label)
+
+        self.colour_x = TextBox(position=(1470, 261), size=(130, 35), colour=(*NAVY, 1.0),
+                              border_colour=(*CYAN, 1.0), corner_radius=5, border_size=2,
+                              label_colour=(*CYAN, 1.0), writable=True)
+        self.panel.add_element(self.colour_x)
+
+        self.colour_y = TextBox(position=(1610, 261), size=(130, 35), colour=(*NAVY, 1.0),
+                              border_colour=(*CYAN, 1.0), corner_radius=5, border_size=2,
+                              label_colour=(*CYAN, 1.0), writable=True)
+        self.panel.add_element(self.colour_y)
+
+        self.colour_z = TextBox(position=(1750, 261), size=(130, 35), colour=(*NAVY, 1.0),
+                              border_colour=(*CYAN, 1.0), corner_radius=5, border_size=2,
+                              label_colour=(*CYAN, 1.0), writable=True)
+        self.panel.add_element(self.colour_z)
+        self.colour_boxes = (self.colour_x, self.colour_y, self.colour_z)
+
+        # Load a preset
+
+        self.preset_button = Button(position=(1205, 312), size=(150, 50), purpose=None, colour=(*NAVY, 1.0),
+                                    border_colour=(*CYAN, 1.0), corner_radius=7, border_size=2, label="SELECT PRESET",
+                                    label_colour=(*CYAN, 1.0), enable_shadow=True)
+        self.panel.add_element(self.preset_button)
+
         # Control Buttons
 
-        self.cancel_button = Button(position=(880, 240), size=(150, 50), purpose=self.clear_and_close,
-                                    colour=(*NAVY, 1.0),
+        self.cancel_button = Button(position=(880, 312), size=(150, 50), purpose=self.clear_and_close, colour=(*NAVY, 1.0),
                                     border_colour=(*RED, 1.0), corner_radius=7, border_size=2, label="CANCEL",
                                     label_colour=(*RED, 1.0), enable_shadow=True)
         self.panel.add_element(self.cancel_button)
 
-        self.enter_button = Button(position=(1530, 240), size=(150, 50), purpose=self.confirm_body, colour=(*NAVY, 1.0),
+        self.enter_button = Button(position=(1530, 312), size=(150, 50), purpose=self.confirm_body, colour=(*NAVY, 1.0),
                                    border_colour=(*GREEN, 1.0), corner_radius=7, border_size=2, label="ENTER BODY",
                                    label_colour=(*GREEN, 1.0), enable_shadow=True)
         self.panel.add_element(self.enter_button)
@@ -207,6 +236,7 @@ class NewBodyPanel:
         position = tuple(validate(box) for box in self.position_boxes)
         velocity = tuple(validate(box) for box in self.velocity_boxes)
         tilt = tuple(validate(box) for box in self.tilt_boxes)
+        colour = tuple(validate(box) for box in self.colour_boxes)
 
         if validation_failed:
             self.panel.freeze()
@@ -223,8 +253,8 @@ class NewBodyPanel:
             "position": position,
             "velocity": velocity,
             "tilt": tilt,
+            "colour": colour
         }
-        print(new_data)
-        ## MAKE NEW BODY HERE ##
+        self.simulation.make_body(new_data)
         self.clear_and_close()
 

@@ -9,9 +9,10 @@ from .textbox import TextBox
 from .type_dropdown import TypeDropdown
 
 class Manager:
-    def __init__(self, screen_size):
+    def __init__(self, screen_size, simulation):
         self.elements = []
         self.screen_size = screen_size
+        self.simulation = simulation
         self.create_ui()
 
     def create_ui(self):
@@ -35,7 +36,7 @@ class Manager:
 
         self.make_invalid()
 
-        self.new_body_panel = NewBodyPanel(self.control_panel.panel.unfreeze, self.invalid_data)
+        self.new_body_panel = NewBodyPanel(self.control_panel.panel.unfreeze, self.invalid_data, self.simulation)
         self.new_body_panel.type_box.purpose = self.show_types_dropdown
         self.new_body_panel.panel.hide()
 
