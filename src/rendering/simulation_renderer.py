@@ -6,6 +6,8 @@ class Simulation_Renderer:
     def __init__(self, context, screen_size):
         self.context = context
         self.screen_size = screen_size
+        self.radius_scale = 150_000.0
+        self.distance_scale = 10_000_000.0
 
         self.sim_program = None
 
@@ -60,19 +62,19 @@ class Simulation_Renderer:
         self.vao = self.context.simple_vertex_array(self.sim_program, self.vbo, "in_position", "in_normal", index_buffer=self.ibo)
 
     def draw(self, body):
-
-        km_2_gl_sf = 1_000_000.0
-        sf_for_visual = 1.0 # Constant value (mainly for orbit distances)
-
-        real_radius = body.radius
-        gl_radius = (real_radius / km_2_gl_sf ) * sf_for_visual
+        gl_radius = body.radius / self.radius_scale
+        #gl_radius = max(gl_radius, 0.4)
 
         # Parameters: fov, aspect ratio, near clipping (nearest point visible), far clipping (furthest point visible)
-        proj_matrix = glm.perspective(glm.radians(45.0), self.screen_size[0] / self.screen_size[1], 0.1, 1000.0)
-        view_matrix = glm.translate(glm.mat4(1.0), glm.vec3(0.0, 0.0, -5.0)) # Last number is camera offset, will be variable
+        proj_matrix = glm.perspective(glm.radians(45.0), self.screen_size[0] / self.screen_size[1], 0.1, 10000000.0)
+        view_matrix = glm.translate(glm.mat4(1.0), glm.vec3(0.0, 0.0, -30.0)) # Last number is camera offset, will be variable
+
+        pos_x = body.position[0] / self.distance_scale
+        pos_y = body.position[1] / self.distance_scale
+        pos_z = body.position[2] / self.distance_scale
 
         model_matrix = glm.mat4(1.0) # blank
-        model_matrix = glm.translate(model_matrix, glm.vec3(0.0, 0.0, 0.0)) # For translating to position (not needed yet)
+        model_matrix = glm.translate(model_matrix, glm.vec3(pos_x, pos_y, pos_z))
         model_matrix = glm.scale(model_matrix, glm.vec3(gl_radius, gl_radius, gl_radius))
 
         self.sim_program["m_proj"].write(proj_matrix)
@@ -80,7 +82,6 @@ class Simulation_Renderer:
         self.sim_program["m_model"].write(model_matrix)
 
         self.sim_program['light_dir'].value = (0.0, 0.0, 1.0)
-        self.sim_program['body_colour'].value = (1.0, 0.5, 0.1)
-
+        self.sim_program['body_colour'].value = body.colour
 
         self.vao.render()

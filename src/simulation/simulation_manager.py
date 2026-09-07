@@ -28,6 +28,19 @@ class Sim_Manager:
             "colour": [1.0, 0.5, 0.1],
         }
         self.make_body(data)
+        data2 = {
+            "name": "Test Body",
+            "type": "Planet",
+            "parent": "The Sun",
+            "density": 5514.0,  # kg/m^3
+            "radius": 6371.0,  # Mean radius in km
+            "spin": 23.93,
+            "position": [149_597_870.0, 1.0, 0.0],  # 50 million km right (X)
+            "velocity": [0.0, 0.0, 0.0],
+            "tilt": [0.0, 1.0, 0.0],
+            "colour": [1.0, 1.0, 1.0],
+        }
+        self.make_body(data2)
 
 
     def produce_simulation(self):

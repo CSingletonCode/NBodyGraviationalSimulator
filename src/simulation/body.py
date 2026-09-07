@@ -24,3 +24,5 @@ class Body:
 
     def draw(self, renderer):
         renderer.draw(self)
+
+
