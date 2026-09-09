@@ -28,7 +28,6 @@ class Element:
     def handle_event(self, event):
         pass
 
-    @property
     def interactable(self):
         return self.visible and self.enabled
 

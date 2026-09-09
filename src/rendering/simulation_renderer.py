@@ -3,9 +3,10 @@ import numpy as np
 from pyglm import glm
 
 class Simulation_Renderer:
-    def __init__(self, context, screen_size):
+    def __init__(self, context, screen_size, camera):
         self.context = context
         self.screen_size = screen_size
+        self.camera = camera
         self.radius_scale = 150_000.0
         self.distance_scale = 10_000_000.0
 
@@ -66,8 +67,8 @@ class Simulation_Renderer:
         #gl_radius = max(gl_radius, 0.4)
 
         # Parameters: fov, aspect ratio, near clipping (nearest point visible), far clipping (furthest point visible)
-        proj_matrix = glm.perspective(glm.radians(45.0), self.screen_size[0] / self.screen_size[1], 0.1, 10000000.0)
-        view_matrix = glm.translate(glm.mat4(1.0), glm.vec3(0.0, 0.0, -30.0)) # Last number is camera offset, will be variable
+        projection_matrix = self.camera.get_projection_matrix()
+        view_matrix = self.camera.get_view_matrix()
 
         pos_x = body.position[0] / self.distance_scale
         pos_y = body.position[1] / self.distance_scale
@@ -77,11 +78,11 @@ class Simulation_Renderer:
         model_matrix = glm.translate(model_matrix, glm.vec3(pos_x, pos_y, pos_z))
         model_matrix = glm.scale(model_matrix, glm.vec3(gl_radius, gl_radius, gl_radius))
 
-        self.sim_program["m_proj"].write(proj_matrix)
+        self.sim_program["m_proj"].write(projection_matrix)
         self.sim_program["m_view"].write(view_matrix)
         self.sim_program["m_model"].write(model_matrix)
 
-        self.sim_program['light_dir'].value = (0.0, 0.0, 1.0)
+        self.sim_program['light_dir'].value = self.camera.position
         self.sim_program['body_colour'].value = body.colour
 
         self.vao.render()

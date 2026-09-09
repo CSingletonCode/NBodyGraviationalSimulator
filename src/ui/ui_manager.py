@@ -118,3 +118,6 @@ class Manager:
         for element in self.elements:
             if element.visible:
                 element.draw(renderer)
+
+    def new_body_panel_state(self):
+        return self.new_body_panel.panel.interactable()

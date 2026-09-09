@@ -33,9 +33,9 @@ class Sim_Manager:
             "type": "Planet",
             "parent": "The Sun",
             "density": 5514.0,  # kg/m^3
-            "radius": 6371.0,  # Mean radius in km
+            "radius": 69_911.0,  # Mean radius in km
             "spin": 23.93,
-            "position": [149_597_870.0, 1.0, 0.0],  # 50 million km right (X)
+            "position": [149_597_870.0, 0.0, 0.0],  # 50 million km right (X)
             "velocity": [0.0, 0.0, 0.0],
             "tilt": [0.0, 1.0, 0.0],
             "colour": [1.0, 1.0, 1.0],

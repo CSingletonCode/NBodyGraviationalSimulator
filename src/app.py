@@ -7,6 +7,7 @@ from simulation.simulation_manager import Sim_Manager
 from rendering.simulation_renderer import Simulation_Renderer
 from ui.constants import *
 from assets. colours import DARKBLUE
+from rendering.camera import Camera
 
 class App:
     def __init__(self):
@@ -32,14 +33,19 @@ class App:
         self.clock = pygame.time.Clock()
 
         self.simulation = Sim_Manager()
-        self.sim_renderer = Simulation_Renderer(self.context, (self.width, self.height))
+        self.camera = Camera(self.width, self.height)
+        self.sim_renderer = Simulation_Renderer(self.context, (self.width, self.height), self.camera)
         self.manager = Manager((self.width, self.height), self.simulation)
         self.ui_renderer = UIRenderer(self.context, (self.width, self.height))
 
 
     def run(self):
         while self.running:
-            self.handleEvents()
+            dt = self.clock.tick(60) / 1000.0
+            self.event_loop(dt)
+            if not self.manager.new_body_panel_state():
+                self.camera.slide(dt)
+            self.camera.update(dt)
             mouse_position = pygame.mouse.get_pos()
             self.manager.update_elements(mouse_position)
             self.context.clear(*DARKBLUE, depth=1.0)
@@ -50,14 +56,17 @@ class App:
             self.context.disable(moderngl.DEPTH_TEST)
             self.manager.render(self.ui_renderer)
             pygame.display.flip()
-            self.clock.tick(60)
 
         pygame.quit()
         sys.exit()
 
-    def handleEvents(self):
+    def event_loop(self, dt):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
 
             self.manager.handle_event(event)
+            if not self.manager.new_body_panel_state():
+                self.camera.handle_event(event, dt)
+
+
