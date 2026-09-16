@@ -7,12 +7,11 @@ uniform mat4 m_proj;
 uniform mat4 m_view;
 uniform mat4 m_model;
 
+out vec3 local_position;
 out vec3 frag_normal;
 
 void main() {
-    // 1. Transform the 3D position into 2D screen space
+    local_position = in_position;
+    frag_normal = mat3(m_view * m_model) * in_normal;
     gl_Position = m_proj * m_view * m_model * vec4(in_position, 1.0);
-
-    // 2. Rotate the normal so it matches the sphere's orientation in the world
-    frag_normal = mat3(m_model) * in_normal;
 }

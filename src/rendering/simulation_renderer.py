@@ -18,16 +18,20 @@ class Simulation_Renderer:
     def triangles_and_normals(self, segments, rings):
         vertices = []
         normals = []
+        texture_coords = []
         # Creates arrays of all vertices and normals in the sphere
         for i in range(rings+1):
+            v = 1.0 - (i / rings)
             phi = (i / rings) * np.pi
             for j in range(segments + 1):
+                u = j / segments
                 theta = (j / segments) * 2 * np.pi
                 x = np.cos(theta) * np.sin(phi)
                 y = np.cos(phi)
                 z = np.sin(theta) * np.sin(phi)
                 vertices.extend([x, y, z])
                 normals.extend([x, y, z])
+                #texture_coords.extend([u, v])
 
         indices = []
         # Connects all the vertices
@@ -35,11 +39,13 @@ class Simulation_Renderer:
             for j in range(segments):
                 p1 = i * (segments + 1) + j # first point
                 p2 = p1 + segments + 1 # point directly below first on next segment
-                indices.extend([p1, p2, p1+1, p1+1, p2, p2+1]) # creates 2 complementing triangles so that they form a square
+                indices.extend([p1, p1+1, p2, p1+1, p2+1, p2]) # creates 2 complementing triangles so that they form a square
 
         vertex_data = np.hstack( # matches each triangle with its normal
             [np.array(vertices, dtype="f4"). reshape(-1,3),
-            np.array(normals, dtype="f4").reshape(-1, 3)]
+            np.array(normals, dtype="f4").reshape(-1, 3)
+             #np.array(texture_coords, dtype="f4").reshape(-1, 2)
+             ]
         ).flatten()
         indices_data = np.array(indices, dtype="i4")
 
@@ -81,8 +87,6 @@ class Simulation_Renderer:
         self.sim_program["m_proj"].write(projection_matrix)
         self.sim_program["m_view"].write(view_matrix)
         self.sim_program["m_model"].write(model_matrix)
-
-        self.sim_program['light_dir'].value = self.camera.position
         self.sim_program['body_colour'].value = body.colour
 
         self.vao.render()

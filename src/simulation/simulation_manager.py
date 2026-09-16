@@ -38,7 +38,7 @@ class Sim_Manager:
             "position": [149_597_870.0, 0.0, 0.0],  # 50 million km right (X)
             "velocity": [0.0, 0.0, 0.0],
             "tilt": [0.0, 1.0, 0.0],
-            "colour": [1.0, 1.0, 1.0],
+            "colour": [0.4, 0.8, 0.1],
         }
         self.make_body(data2)
 

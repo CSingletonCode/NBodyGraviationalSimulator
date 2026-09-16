@@ -8,7 +8,7 @@ class Camera:
         self.desired_target = glm.vec3(0.0, 0.0, 0.0)
         self.current_distance = 30
         self.desired_distance = 30
-        self.position = glm.vec3(0.0, 0.0, -30.0)
+        self.position = glm.vec3(0.0, 0.0, 30.0)
         self.slide_keys = {"w": False, "a": False,"s": False, "d": False}
 
         self.pitch = glm.radians(0.0)
@@ -39,7 +39,7 @@ class Camera:
         self.desired_distance = max(0.1, min(self.desired_distance, 2000.0))
 
     def rotate(self, dx, dy):
-        self.yaw += dx * self.rotate_sensitivity
+        self.yaw -= dx * self.rotate_sensitivity
         self.pitch -= dy * self.rotate_sensitivity
         max_pitch = glm.radians(89.0)
         self.pitch = max(-max_pitch, min(max_pitch, self.pitch))

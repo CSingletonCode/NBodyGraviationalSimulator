@@ -27,6 +27,7 @@ class App:
         self.context.enable(moderngl.BLEND)
         self.context.blend_func = (moderngl.SRC_ALPHA, moderngl.ONE_MINUS_SRC_ALPHA)
         self.context.enable(moderngl.DEPTH_TEST)
+        self.context.enable(moderngl.CULL_FACE)
 
         #Timing Attributes
         self.running = True
@@ -51,9 +52,11 @@ class App:
             self.context.clear(*DARKBLUE, depth=1.0)
 
             self.context.enable(moderngl.DEPTH_TEST)
+            self.context.enable(moderngl.CULL_FACE)
             self.simulation.render(self.sim_renderer)
 
             self.context.disable(moderngl.DEPTH_TEST)
+            self.context.disable(moderngl.CULL_FACE)
             self.manager.render(self.ui_renderer)
             pygame.display.flip()
 
