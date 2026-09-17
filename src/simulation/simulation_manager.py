@@ -24,7 +24,7 @@ class Sim_Manager:
             "spin": 600.0,
             "position": [0.0, 0.0, 0.0],
             "velocity": [0.0, 0.0, 0.0],
-            "tilt": [0.0, 1.0, 0.0],
+            "tilt": [1.0, 1.0, 0.0],
             "colour": [1.0, 0.5, 0.1],
         }
         self.make_body(data)
@@ -32,10 +32,10 @@ class Sim_Manager:
             "name": "Test Body",
             "type": "Planet",
             "parent": "The Sun",
-            "density": 5514.0,  # kg/m^3
-            "radius": 69_911.0,  # Mean radius in km
-            "spin": 23.93,
-            "position": [149_597_870.0, 0.0, 0.0],  # 50 million km right (X)
+            "density": 5514.0,
+            "radius": 69_911.0,
+            "spin": 0.001,
+            "position": [149_597_870.0, 0.0, 0.0],
             "velocity": [0.0, 0.0, 0.0],
             "tilt": [0.0, 1.0, 0.0],
             "colour": [0.4, 0.8, 0.1],
@@ -55,6 +55,7 @@ class Sim_Manager:
         else:
             self.initialise_default()
 
-    def render(self, renderer):
+    def render(self, renderer, dt):
         for body in self.bodies:
+            body.update_rotation(dt)
             body.draw(renderer)

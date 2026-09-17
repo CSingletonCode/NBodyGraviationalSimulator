@@ -5,7 +5,7 @@ from ui.ui_manager import Manager
 from rendering.ui_renderer import UIRenderer
 from simulation.simulation_manager import Sim_Manager
 from rendering.simulation_renderer import Simulation_Renderer
-from ui.constants import *
+from constants import *
 from assets. colours import DARKBLUE
 from rendering.camera import Camera
 
@@ -53,7 +53,7 @@ class App:
 
             self.context.enable(moderngl.DEPTH_TEST)
             self.context.enable(moderngl.CULL_FACE)
-            self.simulation.render(self.sim_renderer)
+            self.simulation.render(self.sim_renderer, dt)
 
             self.context.disable(moderngl.DEPTH_TEST)
             self.context.disable(moderngl.CULL_FACE)

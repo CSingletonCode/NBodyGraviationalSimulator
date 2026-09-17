@@ -69,20 +69,10 @@ class Simulation_Renderer:
         self.vao = self.context.simple_vertex_array(self.sim_program, self.vbo, "in_position", "in_normal", index_buffer=self.ibo)
 
     def draw(self, body):
-        gl_radius = body.radius / self.radius_scale
-        #gl_radius = max(gl_radius, 0.4)
-
         # Parameters: fov, aspect ratio, near clipping (nearest point visible), far clipping (furthest point visible)
         projection_matrix = self.camera.get_projection_matrix()
         view_matrix = self.camera.get_view_matrix()
-
-        pos_x = body.position[0] / self.distance_scale
-        pos_y = body.position[1] / self.distance_scale
-        pos_z = body.position[2] / self.distance_scale
-
-        model_matrix = glm.mat4(1.0) # blank
-        model_matrix = glm.translate(model_matrix, glm.vec3(pos_x, pos_y, pos_z))
-        model_matrix = glm.scale(model_matrix, glm.vec3(gl_radius, gl_radius, gl_radius))
+        model_matrix = body.get_model_matrix()
 
         self.sim_program["m_proj"].write(projection_matrix)
         self.sim_program["m_view"].write(view_matrix)

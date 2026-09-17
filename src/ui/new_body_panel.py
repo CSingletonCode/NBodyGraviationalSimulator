@@ -75,10 +75,10 @@ class NewBodyPanel:
         self.panel.add_element(self.radius_box)
         self.standard_data_boxes.append(self.radius_box)
 
-        # Rotational Velocity
-        self.spin_label = TextBox(position=(1079, 164), size=(150, 20), colour=(*SILVER, 1.0),
+        # Angular Velocity
+        self.spin_label = TextBox(position=(1071, 164), size=(150, 20), colour=(*SILVER, 1.0),
                                   border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
-                                  label_colour=(*BLACK, 1.0), writable=False, label="Rotational Velocity:")
+                                  label_colour=(*BLACK, 1.0), writable=False, label="Rotation Period (hrs)")
         self.panel.add_element(self.spin_label)
         self.spin_box = TextBox(position=(1075, 186), size=(360, 40), colour=(*NAVY, 1.0),
                                 border_colour=(*CYAN, 1.0), corner_radius=5, border_size=2,

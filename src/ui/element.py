@@ -1,6 +1,4 @@
-import pygame as pg
-
-from ui.constants import *
+from constants import *
 
 
 class Element:
