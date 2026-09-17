@@ -7,8 +7,6 @@ class Simulation_Renderer:
         self.context = context
         self.screen_size = screen_size
         self.camera = camera
-        self.radius_scale = 150_000.0
-        self.distance_scale = 10_000_000.0
 
         self.sim_program = None
 

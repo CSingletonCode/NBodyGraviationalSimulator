@@ -1,6 +1,8 @@
 import pygame
 import moderngl
 import sys
+
+from simulation.physics import Physics_Engine
 from ui.ui_manager import Manager
 from rendering.ui_renderer import UIRenderer
 from simulation.simulation_manager import Sim_Manager
@@ -29,23 +31,26 @@ class App:
         self.context.enable(moderngl.DEPTH_TEST)
         self.context.enable(moderngl.CULL_FACE)
 
-        #Timing Attributes
+        #Timing Attributess
         self.running = True
         self.clock = pygame.time.Clock()
 
         self.simulation = Sim_Manager()
         self.camera = Camera(self.width, self.height)
+        self.physics = Physics_Engine(self.simulation.bodies)
         self.sim_renderer = Simulation_Renderer(self.context, (self.width, self.height), self.camera)
         self.manager = Manager((self.width, self.height), self.simulation)
         self.ui_renderer = UIRenderer(self.context, (self.width, self.height))
 
-
     def run(self):
+        time_scale = 100000
         while self.running:
-            dt = self.clock.tick(60) / 1000.0
+            dt =  self.clock.tick(60) / 1000.0
+            dt = dt * time_scale
+            self.physics.update_bodies(dt)
             self.event_loop(dt)
             if not self.manager.new_body_panel_state():
-                self.camera.slide(dt)
+                self.camera.slide(dt/ time_scale)
             self.camera.update(dt)
             mouse_position = pygame.mouse.get_pos()
             self.manager.update_elements(mouse_position)
