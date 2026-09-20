@@ -8,7 +8,7 @@ from rendering.ui_renderer import UIRenderer
 from simulation.simulation_manager import Sim_Manager
 from rendering.simulation_renderer import Simulation_Renderer
 from constants import *
-from assets. colours import DARKBLUE
+from colours import DARKBLUE
 from rendering.camera import Camera
 
 class App:
@@ -43,14 +43,18 @@ class App:
         self.ui_renderer = UIRenderer(self.context, (self.width, self.height))
 
     def run(self):
-        time_scale = 100000
         while self.running:
+
+            speed_index = self.manager.get_speed_index()
+            time_scale = SPEEDS[speed_index]
             dt =  self.clock.tick(60) / 1000.0
             dt = dt * time_scale
-            self.physics.update_bodies(dt)
+            paused = self.manager.get_pause_state()
+            if not paused:
+                self.physics.update_bodies(dt)
             self.event_loop(dt)
             if not self.manager.new_body_panel_state():
-                self.camera.slide(dt/ time_scale)
+                self.camera.slide(dt/time_scale)
             self.camera.update(dt)
             mouse_position = pygame.mouse.get_pos()
             self.manager.update_elements(mouse_position)
@@ -58,7 +62,7 @@ class App:
 
             self.context.enable(moderngl.DEPTH_TEST)
             self.context.enable(moderngl.CULL_FACE)
-            self.simulation.render(self.sim_renderer, dt)
+            self.simulation.render(self.sim_renderer, paused, dt)
 
             self.context.disable(moderngl.DEPTH_TEST)
             self.context.disable(moderngl.CULL_FACE)

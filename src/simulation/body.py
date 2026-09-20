@@ -10,15 +10,30 @@ class Body:
 
         self.density = data["density"]
         self.radius = data["radius"]
+        self.r_period = data["spin"]
         self.spin = self.calculate_angular_velocity(data["spin"])
 
-        self.position = np.array(data["position"], dtype=np.float64)
-        self.velocity = np.array(data["velocity"], dtype=np.float64)
+        self.position = self.calculate_world_position(data)
+        self.velocity = self.calculate_world_velocity(data)
         self.tilt = np.array(data["tilt"], dtype=np.float64)
         self.colour = np.array(data["colour"], dtype=np.float64)
 
         self.rotation = 0.0
         self.mass = self.calculate_mass()
+
+    def calculate_world_position(self, data):
+        pos = np.array(data["position"], dtype=np.float64)
+        if data["parent"] is not None and not isinstance(data["parent"], str):
+            parent_pos = np.array(data["parent"].position, dtype=np.float64)
+            pos += parent_pos
+        return pos
+
+    def calculate_world_velocity(self, data):
+        vel = np.array(data["velocity"], dtype=np.float64)
+        if data["parent"] is not None and not isinstance(data["parent"], str):
+            parent_vel = np.array(data["parent"].velocity, dtype=np.float64)
+            vel += parent_vel
+        return vel
 
     def calculate_mass(self):
         volume = (4.0 / 3.0) * np.pi * ((self.radius * 1000.0) ** 3)

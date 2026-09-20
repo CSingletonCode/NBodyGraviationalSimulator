@@ -1,10 +1,14 @@
+from . import new_body_panel
 from .button import Button
 from .control_panel import ControlPanel
+from .list_bodies_panel import ListBodiesPanel
 from .new_body_panel import NewBodyPanel
-from assets.colours import *
+from colours import *
 import pygame as pg
 
 from .panel import Panel
+from .parent_dropdown import Parent_dropdown
+from .preset_dropdown import PresetDropdown
 from .textbox import TextBox
 from .type_dropdown import TypeDropdown
 
@@ -13,6 +17,7 @@ class Manager:
         self.elements = []
         self.screen_size = screen_size
         self.simulation = simulation
+        self.paused = False
         self.create_ui()
 
     def create_ui(self):
@@ -33,11 +38,17 @@ class Manager:
         self.show_controls_button.purpose = self.control_panel.show_controls
         self.show_controls_button.disable()
         self.control_panel.new_body_button.purpose = self.new_body
+        self.control_panel.list_bodies_button.purpose = self.list_bodies
+
+        self.bodies_list = ListBodiesPanel(self.simulation.bodies)
 
         self.make_invalid()
 
-        self.new_body_panel = NewBodyPanel(self.control_panel.panel.unfreeze, self.invalid_data, self.simulation)
+        self.new_body_panel = NewBodyPanel(self.unfreeze_everything, self.invalid_data, self.simulation, self.retrieve_parent, self.bodies_list.refresh)
+        self.preset_dropdown = PresetDropdown(self.new_body_panel)
         self.new_body_panel.type_box.purpose = self.show_types_dropdown
+        self.new_body_panel.parent_box.purpose = self.show_parents_dropdown
+        self.new_body_panel.preset_button.purpose = self.show_presets_dropdown
         self.new_body_panel.panel.hide()
 
         self.acknowledge.purpose = self.remove_invalid
@@ -45,11 +56,17 @@ class Manager:
         self.type_dropdown = TypeDropdown(self.new_body_panel.type_box, self.new_body_panel.panel.unfreeze)
         self.type_dropdown.panel.hide()
 
+        self.parent_dropdown = Parent_dropdown(self.simulation.bodies, self.new_body_panel.parent_box, self.new_body_panel.panel.unfreeze)
+        self.parent_dropdown.panel.hide()
+
         self.elements.append(self.control_panel.panel)
         self.elements.append(self.show_controls_button)
         self.elements.append(self.new_body_panel.panel)
         self.elements.append(self.type_dropdown.panel)
+        self.elements.append(self.parent_dropdown.panel)
+        self.elements.append(self.preset_dropdown.panel)
         self.elements.append(self.invalid_data)
+        self.elements.append(self.bodies_list.panel)
 
     def make_invalid(self):
         self.invalid_data = Panel(position=(980, 100), size=(600, 300), colour=(*SILVER, 1.0),
@@ -79,9 +96,19 @@ class Manager:
         self.new_body_panel.panel.freeze()
         self.type_dropdown.panel.show()
 
+    def show_parents_dropdown(self):
+        self.new_body_panel.panel.freeze()
+        self.parent_dropdown.refresh()
+        self.parent_dropdown.panel.show()
+
+    def show_presets_dropdown(self):
+        self.new_body_panel.panel.freeze()
+        self.preset_dropdown.panel.show()
+
     def new_body(self):
         self.new_body_panel.panel.show()
         self.control_panel.panel.freeze()
+        self.bodies_list.panel.freeze()
         self.control_panel.quit_button.unfreeze()
 
     def get_all_elements(self):
@@ -121,3 +148,24 @@ class Manager:
 
     def new_body_panel_state(self):
         return self.new_body_panel.panel.interactable()
+
+    def list_bodies(self):
+        if self.bodies_list.panel.visible:
+            self.bodies_list.top = 0
+            self.bodies_list.show_bodies_panels()
+            self.bodies_list.panel.hide()
+        else:
+            self.bodies_list.panel.show()
+
+    def unfreeze_everything(self):
+        self.control_panel.panel.unfreeze()
+        self.bodies_list.panel.unfreeze()
+
+    def get_speed_index(self):
+        return self.control_panel.speed_index
+
+    def get_pause_state(self):
+        return self.control_panel.paused
+
+    def retrieve_parent(self):
+        return self.parent_dropdown.selected

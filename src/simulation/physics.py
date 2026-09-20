@@ -7,7 +7,7 @@ class Physics_Engine():
     def __init__(self, bodies):
         self.bodies = bodies
         self.gravitational_constant = 6.6743e-11 #m3 kg-1 s-2
-        self.softening_value =1e-3
+        self.softening_value = 1e-3
 
     def calculate_acceleration(self, position_array, mass_array, dt):
         position_deltas = position_array[np.newaxis, :, :] - position_array[:, np.newaxis, :]
@@ -53,4 +53,3 @@ class Physics_Engine():
         for i, body in enumerate(self.bodies):
             body.position = new_positions[i] /1000
             body.velocity = new_velocity[i] /1000
-            print(body.position)

@@ -30,10 +30,11 @@ class Panel(Element):
             element.update(mouse_position)
 
     def draw(self, renderer):
-        renderer.draw_basics(self)
-        renderer.draw_text(self)
-        for element in self.contains:
-            element.draw(renderer)
+        if self.visible:
+            renderer.draw_basics(self)
+            renderer.draw_text(self)
+            for element in self.contains:
+                element.draw(renderer)
 
     def freeze(self):
         for element in self.contains:
@@ -42,4 +43,7 @@ class Panel(Element):
     def unfreeze(self):
         for element in self.contains:
             element.unfreeze()
+
+    def clear(self):
+        self.contains = []
 

@@ -1,4 +1,4 @@
-from assets.colours import *
+from colours import *
 from ui.button import Button
 from ui.panel import Panel
 import sys
@@ -11,8 +11,9 @@ class ControlPanel:
         self.panel = Panel(position=(1980, 10), size=(570, 225), colour=(*SILVER, 1.0),
                         border_colour=(*CYAN, 1.0), corner_radius=10, border_size=5)
         self.show_controls_button = scb
-        self.temp_speeds = (1, 10, 100)
-        self.temp_speed_index = 0
+        self.speed_arrows = (">", ">>", ">>>")
+        self.speed_index = 0
+        self.paused = False
         self.add_buttons()
 
     def add_buttons(self):
@@ -32,7 +33,7 @@ class ControlPanel:
         self.panel.add_element(self.pause_button)
 
         self.speed_button = Button(position=(2150, 20), size=(150, 60), purpose=self.change_speed, colour=(*NAVY, 1.0),
-                                      border_colour=(*CYAN, 1.0), corner_radius=7, border_size=2, label=f"x{self.temp_speeds[self.temp_speed_index]} Speed",
+                                      border_colour=(*CYAN, 1.0), corner_radius=7, border_size=2, label=f"Speed: {self.speed_arrows[self.speed_index]}",
                                       label_colour=(*CYAN, 1.0), enable_shadow=True)
         self.panel.add_element(self.speed_button)
 
@@ -41,7 +42,7 @@ class ControlPanel:
                                       label_colour=(*CYAN, 1.0), enable_shadow=True)
         self.panel.add_element(self.new_body_button)
 
-        self.list_bodies_button = Button(position=(2150, 90), size=(150, 60), purpose=self.list_bodies, colour=(*NAVY, 1.0),
+        self.list_bodies_button = Button(position=(2150, 90), size=(150, 60), purpose=None, colour=(*NAVY, 1.0),
                                       border_colour=(*CYAN, 1.0), corner_radius=7, border_size=2, label="List Bodies",
                                       label_colour=(*CYAN, 1.0), enable_shadow=True)
         self.panel.add_element(self.list_bodies_button)
@@ -74,10 +75,13 @@ class ControlPanel:
         else:
             self.pause_button.label = "Pause"
         self.pause_button.text_texture = None
+        self.paused = not self.paused
+        self.speed_index = -1
+        self.change_speed()
 
     def change_speed(self):
-        self.temp_speed_index = (self.temp_speed_index + 1) % 3
-        self.speed_button.label = f"x{self.temp_speeds[self.temp_speed_index]} Speed"
+        self.speed_index = (self.speed_index + 1) % 3
+        self.speed_button.label = f"Speed: {self.speed_arrows[self.speed_index]}"
         self.speed_button.text_texture = None
 
     def center_camera(self):
@@ -86,7 +90,5 @@ class ControlPanel:
     def wipe(self):
         pass
 
-    def list_bodies(self):
-        pass
 
 

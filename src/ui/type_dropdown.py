@@ -1,6 +1,6 @@
 from ui.panel import Panel
 from ui.button import Button
-from assets.colours import *
+from colours import *
 
 
 class TypeDropdown:

@@ -1,22 +1,22 @@
 from ui.button import Button
 from ui.panel import Panel
 from ui.textbox import TextBox
-from assets.colours import *
+from colours import *
 
 class NewBodyPanel:
-    def __init__(self, unfreeze_controls, invalid_data, simulation):
-        self.unfreeze_controls = unfreeze_controls
+    def __init__(self, unfreeze_features, invalid_data, simulation, retrieve_parent, refresh_list):
+        self.unfreeze_features = unfreeze_features
         self.panel = Panel(position=(640, 10), size=(1280, 372), colour=(*SILVER, 1.0),
                         border_colour=(*CYAN, 1.0), corner_radius=10, border_size=5)
         self.standard_data_boxes = []
         self.position_boxes = None
         self.velocity_boxes = None
         self.tilt_boxes = None
+        self.retrieve_parent = retrieve_parent
         self.invalid_data = invalid_data
         self.simulation = simulation
+        self.refresh_list = refresh_list
         self.add_features()
-
-
 
     def add_features(self):
         # Name
@@ -47,11 +47,11 @@ class NewBodyPanel:
                                     border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                     label_colour=(*BLACK, 1.0), writable=False, label="Enter Parent:")
         self.panel.add_element(self.parent_label)
-        self.parent_box = TextBox(position=(680, 186), size=(360, 40), colour=(*NAVY, 1.0),
-                                  border_colour=(*CYAN, 1.0), corner_radius=5, border_size=2,
-                                  label_colour=(*CYAN, 1.0), writable=True)
+        self.parent_box = Button(position=(680, 186), size=(360, 40), purpose=None, colour=(*NAVY, 1.0),
+                                  border_colour=(*CYAN, 1.0), corner_radius=5, border_size=2, label=None,
+                                  label_colour=(*CYAN, 1.0), enable_shadow=False)
+        self.parent_box.press_drop = False
         self.panel.add_element(self.parent_box)
-        self.standard_data_boxes.append(self.parent_box)
 
         # Density
         self.density_label = TextBox(position=(1065, 20), size=(150, 20), colour=(*SILVER, 1.0),
@@ -208,10 +208,13 @@ class NewBodyPanel:
             box.label = ""
             box.text_texture = None
 
-        for boxes in (self.position_boxes, self.velocity_boxes, self.tilt_boxes):
+        self.parent_box.label = ""
+        self.parent_box.text_texture = None
+
+        for boxes in (self.position_boxes, self.velocity_boxes, self.tilt_boxes, self.colour_boxes):
             clear_box_group(boxes)
 
-        self.unfreeze_controls()
+        self.unfreeze_features()
         self.panel.hide()
 
     def confirm_body(self):
@@ -229,9 +232,9 @@ class NewBodyPanel:
                 validation_failed = True
                 return 0.0
 
-        density = validate(self.standard_data_boxes[3])
-        radius = validate(self.standard_data_boxes[4])
-        spin = validate(self.standard_data_boxes[5])
+        density = validate(self.standard_data_boxes[2])
+        radius = validate(self.standard_data_boxes[3])
+        spin = validate(self.standard_data_boxes[4])
 
         position = tuple(validate(box) for box in self.position_boxes)
         velocity = tuple(validate(box) for box in self.velocity_boxes)
@@ -246,7 +249,7 @@ class NewBodyPanel:
         new_data = {
             "name": self.standard_data_boxes[0].label,
             "type": self.standard_data_boxes[1].label,
-            "parent": self.standard_data_boxes[2].label,
+            "parent": self.retrieve_parent(),
             "density": density,
             "radius": radius,
             "spin": spin,
@@ -256,5 +259,6 @@ class NewBodyPanel:
             "colour": colour
         }
         self.simulation.make_body(new_data)
+        self.refresh_list()
         self.clear_and_close()
 

@@ -20,7 +20,7 @@ class Camera:
         self.far = 1000.0
 
         self.rotate_sensitivity = 0.005
-        self.slide_sensitivity = 0.005
+        self.slide_sensitivity = 0.01
         self.zoom_sensitivity = 0.5
         self.linear_interp_speed = 8.0
 
