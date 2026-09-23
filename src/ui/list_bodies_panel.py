@@ -1,4 +1,6 @@
-from simulation.body import Body
+from functools import partial
+
+from rendering.camera import Camera
 from ui.button import Button
 from ui.panel import Panel
 from colours import *
@@ -6,11 +8,12 @@ from ui.textbox import TextBox
 
 
 class ListBodiesPanel():
-    def __init__(self, bodies):
+    def __init__(self, bodies, camera):
         self.panel = Panel(position=(10, 360), size=(320, 720), colour=(*SILVER, 1.0),
                         border_colour=(*CYAN, 1.0), corner_radius=10, border_size=5)
         self.panel.hide()
         self.bodies = bodies
+        self.camera = camera
         self.top = 0
         self.bottom = 2
         self.slots = {}
@@ -74,7 +77,6 @@ class ListBodiesPanel():
 
             if index < len(self.bodies):
                 body = self.bodies[index]
-
                 slot["text"][0].label = f"Name: {body.name}"
                 slot["text"][0].text_texture = None
                 slot["text"][1].label = f"Type: {body.body_type}"
@@ -90,7 +92,7 @@ class ListBodiesPanel():
                 slot["text"][4].text_texture = None
                 slot["text"][5].label = f"Rotation Period: {body.r_period}"
                 slot["text"][5].text_texture = None
-                slot["goto"].purpose = None
+                slot["goto"].purpose = partial(self.camera.lock_on_body, body)
                 slot["trail"].purpose = None
                 slot["panel"].show()
             else:

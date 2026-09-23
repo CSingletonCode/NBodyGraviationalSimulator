@@ -39,7 +39,7 @@ class App:
         self.camera = Camera(self.width, self.height)
         self.physics = Physics_Engine(self.simulation.bodies)
         self.sim_renderer = Simulation_Renderer(self.context, (self.width, self.height), self.camera)
-        self.manager = Manager((self.width, self.height), self.simulation)
+        self.manager = Manager((self.width, self.height), self.simulation, self.camera)
         self.ui_renderer = UIRenderer(self.context, (self.width, self.height))
 
     def run(self):

@@ -7,6 +7,7 @@ class Simulation_Renderer:
         self.context = context
         self.screen_size = screen_size
         self.camera = camera
+        self.proportional_radius = False
 
         self.sim_program = None
 
@@ -16,7 +17,6 @@ class Simulation_Renderer:
     def triangles_and_normals(self, segments, rings):
         vertices = []
         normals = []
-        texture_coords = []
         # Creates arrays of all vertices and normals in the sphere
         for i in range(rings+1):
             v = 1.0 - (i / rings)
@@ -29,7 +29,6 @@ class Simulation_Renderer:
                 z = np.sin(theta) * np.sin(phi)
                 vertices.extend([x, y, z])
                 normals.extend([x, y, z])
-                #texture_coords.extend([u, v])
 
         indices = []
         # Connects all the vertices
@@ -42,7 +41,6 @@ class Simulation_Renderer:
         vertex_data = np.hstack( # matches each triangle with its normal
             [np.array(vertices, dtype="f4"). reshape(-1,3),
             np.array(normals, dtype="f4").reshape(-1, 3)
-             #np.array(texture_coords, dtype="f4").reshape(-1, 2)
              ]
         ).flatten()
         indices_data = np.array(indices, dtype="i4")
@@ -70,7 +68,7 @@ class Simulation_Renderer:
         # Parameters: fov, aspect ratio, near clipping (nearest point visible), far clipping (furthest point visible)
         projection_matrix = self.camera.get_projection_matrix()
         view_matrix = self.camera.get_view_matrix()
-        model_matrix = body.get_model_matrix()
+        model_matrix = body.get_model_matrix(self.proportional_radius)
 
         self.sim_program["m_proj"].write(projection_matrix)
         self.sim_program["m_view"].write(view_matrix)

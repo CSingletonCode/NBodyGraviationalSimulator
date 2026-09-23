@@ -7,6 +7,7 @@ from simulation.body import Body
 class Sim_Manager:
     def __init__(self):
         self.bodies = []
+        self.proportional_radius = False
         self.saved_simulation = "current_simulation.json"
         self.produce_simulation()
 
@@ -30,7 +31,7 @@ class Sim_Manager:
         self.make_body(sun_data)
         earth_data = {
             "name": "Earth",
-            "type": "Planet",
+            "type": "Terrestrial Planet",
             "parent": "The Sun",
             "density": 5514.0,  # kg/m^3
             "radius": 6371.0,  # km
@@ -43,7 +44,7 @@ class Sim_Manager:
         self.make_body(earth_data)
         jupiter_data = {
             "name": "Jupiter",
-            "type": "Planet",
+            "type": "Terrestrial Planet",
             "parent": "The Sun",
             "density": 1326.0,  # kg/m^3 (gas giant, less dense than Earth)
             "radius": 71492.0,  # km (equatorial radius)
@@ -56,7 +57,7 @@ class Sim_Manager:
         self.make_body(jupiter_data)
         moon_data = {
             "name": "The Moon",
-            "type": "Satellite",
+            "type": "Moon",
             "parent": "Earth",
             "density": 3344.0,  # kg/m^3 (rocky body)
             "radius": 1737.4,  # km
@@ -67,6 +68,9 @@ class Sim_Manager:
             "colour": [0.7, 0.7, 0.7],  # Light grey
         }
         self.make_body(moon_data)
+
+    def toggle_proportional_radius(self):
+        self.proportional_radius = not self.proportional_radius
 
     def produce_simulation(self):
         if os.path.exists(self.saved_simulation):
@@ -81,6 +85,7 @@ class Sim_Manager:
             self.initialise_default()
 
     def render(self, renderer, paused, dt):
+        renderer.proportional_radius = self.proportional_radius
         for body in self.bodies:
             if not paused:
                 body.update_rotation(dt)

@@ -1,6 +1,8 @@
 from pyglm import glm
 import math
 import pygame as py
+from constants import RADIUS_SCALE, DISTANCE_SCALE, SIZE_CAPS
+
 
 class Camera:
     def __init__(self,screen_width, screen_height):
@@ -19,24 +21,40 @@ class Camera:
         self.near = 0.1
         self.far = 1000.0
 
-        self.rotate_sensitivity = 0.005
+        self.rotate_sensitivity = 0.002
         self.slide_sensitivity = 0.01
         self.zoom_sensitivity = 0.5
         self.linear_interp_speed = 8.0
 
         self.left_mouse_down = False
+        self.locked_on = False
+        self.locked_body = None
 
-    def centre(self):
-        self.desired_target = glm.vec3(0.0, 0.0, 0.0)
-        self.desired_distance = 30
+        self.proportional_radius = False
 
-    def lock_on_body(self, position, radius):
-        self.desired_target = glm.vec3(position[0], position[1], position[2])
-        self.desired_distance = radius * 6.0
+    def toggle_proportional_radius(self):
+        self.proportional_radius = not self.proportional_radius
+
+    def lock_on_body(self, body):
+        if self.proportional_radius:
+            active_radius = body.radius / RADIUS_SCALE
+        elif body.body_type in SIZE_CAPS:
+            active_radius = max(body.radius / RADIUS_SCALE, SIZE_CAPS.get(body.body_type))
+        else:
+            active_radius = body.radius / RADIUS_SCALE
+        self.desired_target = glm.vec3(body.position) / DISTANCE_SCALE
+        self.desired_distance = max(0.15, active_radius * 6.0)
+        self.locked_body = body
+        self.locked_on = True
 
     def zoom(self,offset):
-        self.desired_distance -= offset * self.zoom_sensitivity
-        self.desired_distance = max(0.1, min(self.desired_distance, 2000.0))
+        if self.locked_on:
+            self.desired_distance -= offset * self.zoom_sensitivity
+            self.desired_distance = max(0.15, min(self.desired_distance, 2000.0))
+        else:
+            forward = glm.normalize(self.current_target - self.position)
+            move_speed = offset * self.zoom_sensitivity
+            self.desired_target += forward * move_speed
 
     def rotate(self, dx, dy):
         self.yaw -= dx * self.rotate_sensitivity
@@ -45,7 +63,7 @@ class Camera:
         self.pitch = max(-max_pitch, min(max_pitch, self.pitch))
 
     def slide(self, dt, ):
-        speed = self.current_distance * self.slide_sensitivity * dt * 100.0
+        speed = self.current_distance * self.slide_sensitivity * dt * 50.0
         world_up = glm.vec3(0.0, 1.0, 0.0)
 
         forward = glm.vec3(
@@ -68,10 +86,14 @@ class Camera:
 
         if glm.length(movement) > 0.0:
             movement = glm.normalize(movement)
+            self.locked_on = False
+            self.locked_body = None
 
         self.desired_target += movement * speed
 
     def update(self, dt):
+        if self.locked_on and self.locked_body:
+            self.desired_target = glm.vec3(self.locked_body.position) / DISTANCE_SCALE
         t = min(1.0, dt * self.linear_interp_speed)
         self.current_target = glm.mix(self.current_target, self.desired_target, t)
         self.current_distance = glm.mix(self.current_distance, self.desired_distance, t)

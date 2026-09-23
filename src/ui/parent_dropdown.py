@@ -8,12 +8,13 @@ class Parent_dropdown:
         self.bodies = bodies
         self.parent_box = parent_box
         self.unfreeze_nbp = unfreeze_nbp
-        self.panel = Panel(position=(685, 226), size=(350, 40*(len(bodies)+1)), colour=(*NAVY, 1.0),
+        self.panel = Panel(position=(685, 226), size=(350, 40*(len(self.bodies)+1)), colour=(*NAVY, 1.0),
                            border_colour=(*CYAN, 1.0), corner_radius=0, border_size=2)
         self.selected = None
         self.add_buttons()
 
     def refresh(self):
+        self.panel.size = (350, 40*(len(self.bodies)+1))
         self.panel.clear()
         self.add_buttons()
 

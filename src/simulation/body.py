@@ -1,6 +1,7 @@
 import numpy as np
 from pyglm import glm
-from constants import RADIUS_SCALE, DISTANCE_SCALE
+from constants import RADIUS_SCALE, DISTANCE_SCALE, SIZE_CAPS
+
 
 class Body:
     def __init__(self, data):
@@ -47,8 +48,11 @@ class Body:
     def update_rotation(self, dt):
         self.rotation =  (self.rotation + self.spin * dt) % (2.0 * np.pi)
 
-    def get_model_matrix(self):
-        scaled_radius = self.radius / RADIUS_SCALE
+    def get_model_matrix(self, proportional_radius):
+        if proportional_radius:
+            scaled_radius = self.radius / RADIUS_SCALE
+        else:
+            scaled_radius = max(self.radius / RADIUS_SCALE, SIZE_CAPS.get(self.body_type, 0.01))
         scaled_position = self.position / DISTANCE_SCALE
 
         model_matrix = glm.mat4(1.0)

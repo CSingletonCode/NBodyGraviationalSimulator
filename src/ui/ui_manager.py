@@ -13,10 +13,11 @@ from .textbox import TextBox
 from .type_dropdown import TypeDropdown
 
 class Manager:
-    def __init__(self, screen_size, simulation):
+    def __init__(self, screen_size, simulation, camera):
         self.elements = []
         self.screen_size = screen_size
         self.simulation = simulation
+        self.camera = camera
         self.paused = False
         self.create_ui()
 
@@ -39,8 +40,10 @@ class Manager:
         self.show_controls_button.disable()
         self.control_panel.new_body_button.purpose = self.new_body
         self.control_panel.list_bodies_button.purpose = self.list_bodies
+        self.control_panel.toggle_radius_button.purpose = lambda *args: (self.simulation.toggle_proportional_radius(), self.camera.toggle_proportional_radius())
+        self.control_panel.clear_button.purpose = self.clear_bodies
 
-        self.bodies_list = ListBodiesPanel(self.simulation.bodies)
+        self.bodies_list = ListBodiesPanel(self.simulation.bodies, self.camera)
 
         self.make_invalid()
 
@@ -111,12 +114,14 @@ class Manager:
         self.bodies_list.panel.freeze()
         self.control_panel.quit_button.unfreeze()
 
-    def get_all_elements(self):
+    def get_all_elements(self, elements=None):
+        if elements is None:
+            elements = self.elements
         temp = []
-        for element in self.elements:
+        for element in elements:
             temp.append(element)
             if hasattr(element, "contains"):
-                temp.extend(element.contains)
+                temp.extend(self.get_all_elements(element.contains))
         return temp
 
     def update_elements(self, mouse_position):
@@ -151,11 +156,11 @@ class Manager:
 
     def list_bodies(self):
         if self.bodies_list.panel.visible:
-            self.bodies_list.top = 0
-            self.bodies_list.show_bodies_panels()
             self.bodies_list.panel.hide()
         else:
             self.bodies_list.panel.show()
+            self.bodies_list.top = 0
+            self.bodies_list.show_bodies_panels()
 
     def unfreeze_everything(self):
         self.control_panel.panel.unfreeze()
@@ -169,3 +174,7 @@ class Manager:
 
     def retrieve_parent(self):
         return self.parent_dropdown.selected
+
+    def clear_bodies(self):
+        self.simulation.bodies.clear()
+        self.bodies_list.refresh()
