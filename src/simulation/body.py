@@ -1,3 +1,4 @@
+from collections import deque
 import numpy as np
 from pyglm import glm
 from constants import RADIUS_SCALE, DISTANCE_SCALE, SIZE_CAPS
@@ -8,42 +9,37 @@ class Body:
         self.name = data["name"]
         self.body_type = data["type"]
         self.parent = data["parent"]
-
         self.density = data["density"]
         self.radius = data["radius"]
-        self.r_period = data["spin"]
-        self.spin = self.calculate_angular_velocity(data["spin"])
-
-        self.position = self.calculate_world_position(data)
-        self.velocity = self.calculate_world_velocity(data)
-        self.tilt = np.array(data["tilt"], dtype=np.float64)
-        self.colour = np.array(data["colour"], dtype=np.float64)
-
+        self.mass = data["mass"]
+        self.r_period = data["r_period"]
+        self.spin = data["spin"]
+        self.position = np.asarray(data["position"], dtype=np.float64)
+        self.velocity = np.asarray(data["velocity"], dtype=np.float64)
+        self.tilt = np.asarray(data["tilt"], dtype=np.float64)
+        self.colour = np.asarray(data["colour"], dtype=np.float64)
         self.rotation = 0.0
-        self.mass = self.calculate_mass()
 
-    def calculate_world_position(self, data):
-        pos = np.array(data["position"], dtype=np.float64)
-        if data["parent"] is not None and not isinstance(data["parent"], str):
-            parent_pos = np.array(data["parent"].position, dtype=np.float64)
-            pos += parent_pos
-        return pos
+        self.trail = deque(maxlen=4000)
+        self.trail_gap = (0.15 * DISTANCE_SCALE ) ** 2
+        self.trail_on = False
 
-    def calculate_world_velocity(self, data):
-        vel = np.array(data["velocity"], dtype=np.float64)
-        if data["parent"] is not None and not isinstance(data["parent"], str):
-            parent_vel = np.array(data["parent"].velocity, dtype=np.float64)
-            vel += parent_vel
-        return vel
-
-    def calculate_mass(self):
-        volume = (4.0 / 3.0) * np.pi * ((self.radius * 1000.0) ** 3)
-        mass = volume * self.density
-        return mass
-
-    def calculate_angular_velocity(self, rotation_period):
-        v = ( 2.0 * np.pi ) / (3600.0 * rotation_period)
-        return v
+    def make_dict(self):
+        return {
+            "name": self.name,
+            "type": self.body_type,
+            "parent": self.parent,
+            "density": self.density,
+            "radius": self.radius,
+            "mass": self.mass,
+            "r_period": self.r_period,
+            "spin": self.spin,
+            "position": self.position.tolist(),
+            "velocity": self.velocity.tolist(),
+            "tilt": self.tilt.tolist(),
+            "colour": self.colour.tolist(),
+            "rotation": self.rotation,
+        }
 
     def update_rotation(self, dt):
         self.rotation =  (self.rotation + self.spin * dt) % (2.0 * np.pi)
@@ -72,7 +68,28 @@ class Body:
 
         return model_matrix
 
+    def add_to_trail(self):
+        if not self.trail:
+            self.trail.append(self.position)
+            return
+
+        last_position = self.trail[-1]
+        dx = last_position[0] - self.position[0]
+        dy = last_position[1] - self.position[1]
+        dz = last_position[2] - self.position[2]
+        squared_dist = (dx * dx) + (dy * dy) + (dz * dz)
+
+        if squared_dist >= self.trail_gap:
+            self.trail.append(self.position)
+
+    def toggle_trail(self):
+        self.trail_on = not self.trail_on
+
+    def clear_trail(self):
+        self.trail.clear()
+
     def draw(self, renderer):
         renderer.draw(self)
+        renderer.draw_trail(self)
 
 

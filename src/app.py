@@ -44,14 +44,13 @@ class App:
 
     def run(self):
         while self.running:
-
             speed_index = self.manager.get_speed_index()
             time_scale = SPEEDS[speed_index]
-            dt =  self.clock.tick(60) / 1000.0
-            dt = dt * time_scale
+            steps_num = SUBSTEPS[speed_index]
+            dt = time_scale * self.clock.tick(60) / 1000.0
             paused = self.manager.get_pause_state()
             if not paused:
-                self.physics.update_bodies(dt)
+                self.physics.update_bodies(dt, steps_num)
             self.event_loop(dt)
             if not self.manager.new_body_panel_state():
                 self.camera.slide(dt/time_scale)

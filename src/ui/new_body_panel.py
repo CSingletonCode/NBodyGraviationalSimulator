@@ -1,3 +1,4 @@
+import numpy as np
 from ui.button import Button
 from ui.panel import Panel
 from ui.textbox import TextBox
@@ -246,15 +247,25 @@ class NewBodyPanel:
             self.invalid_data.show()
             return
 
+        parent_object = self.retrieve_parent()
+        if parent_object is None:
+            parent_name = "None"
+        elif isinstance(parent_object, str):
+            parent_name = parent_object
+        else:
+            parent_name = parent_object.name
+
         new_data = {
             "name": self.standard_data_boxes[0].label,
             "type": self.standard_data_boxes[1].label,
-            "parent": self.retrieve_parent(),
+            "parent": parent_name,
             "density": density,
             "radius": radius,
-            "spin": spin,
-            "position": position,
-            "velocity": velocity,
+            "mass": self.calculate_mass(density, radius),
+            "r_period": spin,
+            "spin": self.calculate_angular_velocity(spin),
+            "position": self.calculate_world_position(parent_object, position),
+            "velocity": self.calculate_world_velocity(parent_object, velocity),
             "tilt": tilt,
             "colour": colour
         }
@@ -262,3 +273,25 @@ class NewBodyPanel:
         self.refresh_list()
         self.clear_and_close()
 
+    def calculate_world_position(self, parent, local_position):
+        pos = np.array(local_position, dtype=np.float64)
+        if parent is not None and not isinstance(parent, str):
+            parent_pos = np.array(parent.position, dtype=np.float64)
+            pos += parent_pos
+        return pos
+
+    def calculate_world_velocity(self, parent, local_velocity):
+        vel = np.array(local_velocity, dtype=np.float64)
+        if parent is not None and not isinstance(parent, str):
+            parent_vel = np.array(parent.velocity, dtype=np.float64)
+            vel += parent_vel
+        return vel
+
+    def calculate_angular_velocity(self, rotation_period):
+        v = ( 2.0 * np.pi ) / (3600.0 * rotation_period)
+        return v
+
+    def calculate_mass(self, density, radius):
+        volume = (4.0 / 3.0) * np.pi * ((radius * 1000.0) ** 3)
+        mass = volume * density
+        return mass

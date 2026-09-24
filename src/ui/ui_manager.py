@@ -35,7 +35,7 @@ class Manager:
             enable_shadow=False
         )
 
-        self.control_panel = ControlPanel(self.show_controls_button)
+        self.control_panel = ControlPanel(self.show_controls_button, self.simulation)
         self.show_controls_button.purpose = self.control_panel.show_controls
         self.show_controls_button.disable()
         self.control_panel.new_body_button.purpose = self.new_body
@@ -43,7 +43,7 @@ class Manager:
         self.control_panel.toggle_radius_button.purpose = lambda *args: (self.simulation.toggle_proportional_radius(), self.camera.toggle_proportional_radius())
         self.control_panel.clear_button.purpose = self.clear_bodies
 
-        self.bodies_list = ListBodiesPanel(self.simulation.bodies, self.camera)
+        self.bodies_list = ListBodiesPanel(self.simulation, self.camera)
 
         self.make_invalid()
 
@@ -178,3 +178,5 @@ class Manager:
     def clear_bodies(self):
         self.simulation.bodies.clear()
         self.bodies_list.refresh()
+
+

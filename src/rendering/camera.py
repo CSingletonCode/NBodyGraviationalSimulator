@@ -19,11 +19,11 @@ class Camera:
         self.fov = 45.0
         self.aspect_ratio = screen_width / screen_height
         self.near = 0.1
-        self.far = 1000.0
+        self.far = 2000.0
 
-        self.rotate_sensitivity = 0.002
-        self.slide_sensitivity = 0.01
-        self.zoom_sensitivity = 0.5
+        self.rotate_sensitivity = 0.0075
+        self.slide_sensitivity = 1.75
+        self.zoom_sensitivity = 1.0
         self.linear_interp_speed = 8.0
 
         self.left_mouse_down = False
@@ -63,7 +63,8 @@ class Camera:
         self.pitch = max(-max_pitch, min(max_pitch, self.pitch))
 
     def slide(self, dt, ):
-        speed = self.current_distance * self.slide_sensitivity * dt * 50.0
+        # speed = self.current_distance * self.slide_sensitivity * dt * 50.0
+        speed = self.slide_sensitivity * dt * 50.0
         world_up = glm.vec3(0.0, 1.0, 0.0)
 
         forward = glm.vec3(

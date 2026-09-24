@@ -1,6 +1,5 @@
 # VELOCITY VERLET INTEGRATION
 # REPORT COLLISION AND PASS THROUGH
-
 import numpy as np
 
 class Physics_Engine():
@@ -19,7 +18,6 @@ class Physics_Engine():
         acceleration_array = self.gravitational_constant * np.sum(position_deltas * main_fraction, axis=1)
         return acceleration_array
 
-
     def calculate_position(self, current_position_array, current_velocity_array, current_acceleration_array, dt):
         new_position_array = current_position_array + current_velocity_array * dt + 0.5 * current_acceleration_array * dt**2
         return new_position_array
@@ -29,27 +27,35 @@ class Physics_Engine():
         new_velocity_array = current_velocity_array + average_acceleration * dt
         return new_velocity_array
 
-    def update_bodies(self, dt):
+    def update_bodies(self, dt, num_steps):
         if len(self.bodies) == 0:
             return
+
+        dt_step = dt / num_steps
 
         # Get current positions, velocity and mass for every body in the simulation
         current_positions = np.array([body.position * 1000.0 for body in self.bodies], dtype=np.float64)
         current_velocity = np.array([body.velocity * 1000.0 for body in self.bodies], dtype=np.float64)
         masses = np.array([body.mass for body in self.bodies], dtype=np.float64)
 
+        for _ in range(num_steps):
         # Calculate acceleration
-        current_acceleration = self.calculate_acceleration(current_positions, masses, dt)
+            current_acceleration = self.calculate_acceleration(current_positions, masses, dt_step)
 
-        # Calculate new position
-        new_positions = self.calculate_position(current_positions, current_velocity, current_acceleration, dt)
+            # Calculate new position
+            new_positions = self.calculate_position(current_positions, current_velocity, current_acceleration, dt_step)
 
-        # Calculate new acceleration
-        new_acceleration = self.calculate_acceleration(new_positions, masses, dt)
+            # Calculate new acceleration
+            new_acceleration = self.calculate_acceleration(new_positions, masses, dt_step)
 
-        # Calculate new velocity
-        new_velocity = self.calculate_velocity(current_velocity, current_acceleration, new_acceleration, dt)
+            # Calculate new velocity
+            new_velocity = self.calculate_velocity(current_velocity, current_acceleration, new_acceleration, dt_step)
+
+            current_positions = new_positions
+            current_velocity = new_velocity
 
         for i, body in enumerate(self.bodies):
-            body.position = new_positions[i] /1000
-            body.velocity = new_velocity[i] /1000
+            body.position = current_positions[i] / 1000.0
+            body.velocity = current_velocity[i] / 1000.0
+            body.add_to_trail()
+

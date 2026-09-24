@@ -1,6 +1,22 @@
 class Presets:
     def __init__(self):
         self.preset_list = []
+        sun_data = {
+            "name": "The Sun",
+            "type": "Star",
+            "parent": None,
+            "density": 1408.0,  # kg/m^3
+            "radius": 695700.0,  # km (IAU nominal mean solar radius)
+            "mass": 1.989e30,  # kg
+            "r_period": 609.12,  # hours (~25.38 days rotation period)
+            "spin": 609.12,  # km/s (equatorial surface rotational speed)
+            "position": [0.0, 0.0, 0.0],  # km
+            "velocity": [0.0, 0.0, 0.0],  # km/s
+            "tilt": [0.1265, 0.0, 0.0],  # axial tilt in radians (7.25° converted to radians, between -1 and 1)
+            "colour": [1.0, 0.85, 0.3],  # Normalized RGB
+        }
+        self.preset_list.append(sun_data)
+
         self.earth_data = {
             "name": "Earth",
             "type": "Terrestrial Planet",

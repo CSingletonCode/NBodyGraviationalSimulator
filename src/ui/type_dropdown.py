@@ -7,7 +7,7 @@ class TypeDropdown:
     def __init__(self, type_box, unfreeze_nbp):
         self.panel = Panel(position=(685, 154), size=(350, 280), colour=(*NAVY, 1.0),
                            border_colour=(*CYAN, 1.0), corner_radius=0, border_size=2)
-        self.types = ["Terrestrial Planet", "Terrestrial Planet", "Ice Giant", "Terrestrial Planet", "Dwarf Planet", "Asteroid", "Comet"]
+        self.types = ["Star", "Gas Giant", "Ice Giant", "Terrestrial Planet", "Dwarf Planet", "Moon", "Asteroid", "Comet"]
         self.type_box = type_box
         self.unfreeze_nbp = unfreeze_nbp
         self.add_buttons()

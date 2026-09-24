@@ -3,7 +3,7 @@ import pygame as pg
 import moderngl
 from pathlib import Path
 
-class UIRenderer():
+class UIRenderer:
     def __init__(self, context, screen_size):
         self.ui_program = None
         self.text_program = None
@@ -12,7 +12,6 @@ class UIRenderer():
         self.font = pg.font.SysFont("Arial", 20, bold=True)
 
         pg.font.init()
-
 
         self.shade()
         self.make_geometry()
@@ -52,7 +51,7 @@ class UIRenderer():
         self.ui_vbo = self.context.buffer(vertices.tobytes())
         self.ui_vao = self.context.simple_vertex_array(self.ui_program, self.ui_vbo, "base_position")
 
-        # 2. Text Geometry (X, Y, U, V) - Adds texture mapping coordinates
+        # Text Geometry (X, Y, U, V) - Adds texture mapping coordinates
         text_vertices = np.array(
             [
                 # X,    Y,      U,   V (Texture Coordinates)

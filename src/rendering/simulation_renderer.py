@@ -1,6 +1,10 @@
 from pathlib import Path
+
+import moderngl
 import numpy as np
 from pyglm import glm
+
+from constants import DISTANCE_SCALE
 
 class Simulation_Renderer:
     def __init__(self, context, screen_size, camera):
@@ -10,6 +14,8 @@ class Simulation_Renderer:
         self.proportional_radius = False
 
         self.sim_program = None
+        self.trail_program = None
+        self.trail_vbo = context.buffer(reserve=60000)
 
         self.shade()
         self.make_geometry()
@@ -56,13 +62,21 @@ class Simulation_Renderer:
         with open(shader_directory / "sim_fragment.glsl") as file:
             fragment_shader = file.read()
 
+        with open(shader_directory / "trail_vertex.glsl") as file:
+            trail_vertex_shader = file.read()
+
+        with open(shader_directory / "trail_fragment.glsl") as file:
+            trail_fragment_shader = file.read()
+
         self.sim_program = self.context.program(vertex_shader=vertex_shader, fragment_shader=fragment_shader)
+        self.trail_program = self.context.program(vertex_shader=trail_vertex_shader, fragment_shader=trail_fragment_shader)
 
     def make_geometry(self):
         vertex_data, indices_data = self.triangles_and_normals(32, 26)
         self.vbo = self.context.buffer(vertex_data)
         self.ibo = self.context.buffer(indices_data)
         self.vao = self.context.simple_vertex_array(self.sim_program, self.vbo, "in_position", "in_normal", index_buffer=self.ibo)
+        self.trail_vao = self.context.simple_vertex_array(self.trail_program, self.trail_vbo, "in_position")
 
     def draw(self, body):
         # Parameters: fov, aspect ratio, near clipping (nearest point visible), far clipping (furthest point visible)
@@ -76,3 +90,20 @@ class Simulation_Renderer:
         self.sim_program['body_colour'].value = body.colour
 
         self.vao.render()
+
+    def draw_trail(self, body):
+        if len(body.trail) < 2 or not body.trail_on:
+            return
+
+        projection_matrix = self.camera.get_projection_matrix()
+        view_matrix = self.camera.get_view_matrix()
+
+        scaled_points = np.array(body.trail, dtype="f4") / DISTANCE_SCALE
+        self.trail_vbo.write(scaled_points)
+
+        self.trail_vao.program["projection_matrix"].write(projection_matrix)
+        self.trail_vao.program["view_matrix"].write(view_matrix)
+
+        self.context.line_width = 2.0
+        self.trail_vao.render(moderngl.LINE_STRIP, vertices=len(body.trail))
+

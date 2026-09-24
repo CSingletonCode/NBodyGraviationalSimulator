@@ -7,10 +7,11 @@ import pygame as pg
 
 
 class ControlPanel:
-    def __init__(self, scb):
+    def __init__(self, scb, simulation):
         self.panel = Panel(position=(1980, 10), size=(570, 225), colour=(*SILVER, 1.0),
                         border_colour=(*CYAN, 1.0), corner_radius=10, border_size=5)
         self.show_controls_button = scb
+        self.simulation = simulation
         self.speed_arrows = (">", ">>", ">>>")
         self.speed_index = 0
         self.paused = False
@@ -52,7 +53,7 @@ class ControlPanel:
                                       label_colour=(*CYAN, 1.0), enable_shadow=True)
         self.panel.add_element(self.toggle_radius_button)
 
-        self.clear_button = Button(position=(2150, 160), size=(150, 60), purpose=self.wipe, colour=(*NAVY, 1.0),
+        self.clear_button = Button(position=(2150, 160), size=(150, 60), purpose=None, colour=(*NAVY, 1.0),
                                       border_colour=(*CYAN, 1.0), corner_radius=7, border_size=2, label="Clear All",
                                       label_colour=(*CYAN, 1.0), enable_shadow=True)
         self.panel.add_element(self.clear_button)
@@ -66,6 +67,7 @@ class ControlPanel:
         self.show_controls_button.enable()
 
     def quit(self):
+        self.simulation.save_simulation()
         pg.quit()
         sys.exit()
 
@@ -83,9 +85,6 @@ class ControlPanel:
         self.speed_index = (self.speed_index + 1) % 3
         self.speed_button.label = f"Speed: {self.speed_arrows[self.speed_index]}"
         self.speed_button.text_texture = None
-
-    def wipe(self):
-        pass
 
 
 
