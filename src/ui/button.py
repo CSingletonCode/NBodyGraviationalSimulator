@@ -1,5 +1,7 @@
 import pygame as pg
 from ui.element import Element
+from constants import WIDTH_SCALE, HEIGHT_SCALE
+
 
 class Button(Element):
     def __init__(self, position, size, purpose, colour, border_colour, label, label_colour, corner_radius, border_size, enable_shadow):
@@ -8,7 +10,7 @@ class Button(Element):
         self.label = label
         self.text_texture = None
         self.pressed = False
-        self.font = pg.font.SysFont("Arial", 20, bold=True)
+        self.font = pg.font.SysFont("Arial", 20 * int(min(WIDTH_SCALE, HEIGHT_SCALE)), bold=True)
         self.label_colour = tuple(255*c for c in label_colour)
         self.press_drop = True
 

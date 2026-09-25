@@ -11,7 +11,7 @@ class UIRenderer:
         self.context = context
         self.screen_size = screen_size
         self.ui_scale = float(min(HEIGHT_SCALE, WIDTH_SCALE))
-        self.font = pg.font.SysFont("Arial", int(20 * self.ui_scale), bold=True)
+        #self.font = pg.font.SysFont("Arial", int(20 * self.ui_scale), bold=True)
 
         pg.font.init()
 
@@ -99,7 +99,7 @@ class UIRenderer:
         if element.label is not None:
             if element.text_texture is None:
                 text = element.font.render(element.label, True, element.label_colour)
-                extended = pg.Surface((int(text.get_width() * WIDTH_SCALE), int(text.get_height()+4 * HEIGHT_SCALE)) , pg.SRCALPHA)
+                extended = pg.Surface((text.get_width(), text.get_height() + int(4 * HEIGHT_SCALE)) , pg.SRCALPHA)
                 extended.blit(text, (0, 0))
                 element.text_size = extended.get_size()
                 pixel_data = pg.image.tobytes(extended, "RGBA")
