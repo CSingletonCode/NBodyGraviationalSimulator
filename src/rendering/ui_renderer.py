@@ -99,7 +99,7 @@ class UIRenderer:
         if element.label is not None:
             if element.text_texture is None:
                 text = element.font.render(element.label, True, element.label_colour)
-                extended = pg.Surface((text.get_width(), text.get_height()+4), pg.SRCALPHA)
+                extended = pg.Surface((int(text.get_width() * WIDTH_SCALE), int(text.get_height()+4 * HEIGHT_SCALE)) , pg.SRCALPHA)
                 extended.blit(text, (0, 0))
                 element.text_size = extended.get_size()
                 pixel_data = pg.image.tobytes(extended, "RGBA")
