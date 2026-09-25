@@ -2,6 +2,7 @@ import numpy as np
 import pygame as pg
 import moderngl
 from pathlib import Path
+from constants import *
 
 class UIRenderer:
     def __init__(self, context, screen_size):
@@ -9,7 +10,8 @@ class UIRenderer:
         self.text_program = None
         self.context = context
         self.screen_size = screen_size
-        self.font = pg.font.SysFont("Arial", 20, bold=True)
+        self.ui_scale = float(min(HEIGHT_SCALE, WIDTH_SCALE))
+        self.font = pg.font.SysFont("Arial", int(20 * self.ui_scale), bold=True)
 
         pg.font.init()
 
@@ -77,17 +79,19 @@ class UIRenderer:
 
         self.ui_program["colour"].value = element.colour
         self.ui_program["border_colour"].value = element.border_colour
-        self.ui_program["radius"].value = element.corner_radius
-        self.ui_program["border_size"].value = element.border_size
+        self.ui_program["radius"].value = element.corner_radius * self.ui_scale
+        self.ui_program["border_size"].value = element.border_size * self.ui_scale
+
+        self.ui_program["ui_scale"].value = self.ui_scale
 
         self.ui_program["enable_shadow"].value = element.enable_shadow
         if  element.enable_shadow:
             if element.pressed and element.press_drop:
-                self.ui_program["shadow_offset"].value = (0.0, 2.0)
-                self.ui_program["shadow_blur"].value = 4.0
+                self.ui_program["shadow_offset"].value = (0.0, 2.0 * self.ui_scale)
+                self.ui_program["shadow_blur"].value = 4.0 * self.ui_scale
             else:
-                self.ui_program["shadow_offset"].value = (0.0, 4.0)
-                self.ui_program["shadow_blur"].value = 8.0
+                self.ui_program["shadow_offset"].value = (0.0, 4.0 * self.ui_scale)
+                self.ui_program["shadow_blur"].value = 8.0 * self.ui_scale
 
         self.ui_vao.render()
 

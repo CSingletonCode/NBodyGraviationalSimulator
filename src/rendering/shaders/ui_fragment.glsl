@@ -7,6 +7,7 @@ uniform vec2 position;
 uniform vec2 size;
 uniform float radius;
 uniform vec2 screen_size;
+uniform float ui_scale;
 uniform bool enable_shadow;
 uniform vec2 shadow_offset;
 uniform float shadow_blur;
@@ -62,8 +63,8 @@ void main()
         vec2 half_size = size * 0.5;
 
         // removes the shadow from the sides and above
-        float side_fade = 1.0 - smoothstep(half_size.x - 6.0, half_size.x + 4.0, abs(relative_position.x));
-        float top_fade = smoothstep(-half_size.y - 4.0, half_size.y * 0.2, relative_position.y);
+        float side_fade = 1.0 - smoothstep(half_size.x - (6.0 * ui_scale), half_size.x + (4.0 * ui_scale), abs(relative_position.x));
+        float top_fade = smoothstep(-half_size.y - (4.0 * ui_scale), half_size.y * (0.2 * ui_scale), relative_position.y);
 
         // Apply both fades to the shadow
         shadow_alpha *= side_fade * top_fade;

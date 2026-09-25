@@ -4,10 +4,8 @@ from constants import *
 class Element:
     def __init__(self, position, size, colour, border_colour, corner_radius, border_size, enable_shadow):
         # Positioned from top left corner
-        self.position = ((position[0]/REFERENCE_RESOLUTION[0])*ACTIVE_RESOLUTION.current_w,
-                        (position[1]/REFERENCE_RESOLUTION[1])*ACTIVE_RESOLUTION.current_h)
-        self.size = ((size[0]/REFERENCE_RESOLUTION[0])*ACTIVE_RESOLUTION.current_w,
-                     (size[1]/REFERENCE_RESOLUTION[1])*ACTIVE_RESOLUTION.current_h)
+        self.position = (position[0] * WIDTH_SCALE, position[1] * HEIGHT_SCALE)
+        self.size = (size[0] * WIDTH_SCALE, size[1] * HEIGHT_SCALE)
         self.colour = colour
         self.border_colour = border_colour
         self.corner_radius = corner_radius

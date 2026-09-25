@@ -13,7 +13,6 @@ class ListBodiesPanel:
                         border_colour=(*CYAN, 1.0), corner_radius=10, border_size=5)
         self.panel.hide()
         self.simulation = simulation
-        #self.bodies = bodies
         self.camera = camera
         self.top = 0
         self.bottom = 2
