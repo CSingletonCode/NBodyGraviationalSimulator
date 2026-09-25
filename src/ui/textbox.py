@@ -1,3 +1,4 @@
+from constants import WIDTH_SCALE, HEIGHT_SCALE
 from ui.element import Element
 import pygame as pg
 
@@ -9,7 +10,7 @@ class TextBox(Element):
         self.label_colour = tuple(255*c for c in label_colour)
         self.writable = writable
         self.font_name = "Arial"
-        self.label_size = 20
+        self.label_size = int(20 * float(min(WIDTH_SCALE, HEIGHT_SCALE)))
         self.bold = True
         self.font = pg.font.SysFont(self.font_name, self.label_size, self.bold)
         self.pressed = False

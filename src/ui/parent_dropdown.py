@@ -1,7 +1,7 @@
+from constants import WIDTH_SCALE, HEIGHT_SCALE
 from ui.button import Button
 from ui.panel import Panel
 from colours import *
-
 
 class Parent_dropdown:
     def __init__(self, bodies, parent_box, unfreeze_nbp):
@@ -14,7 +14,7 @@ class Parent_dropdown:
         self.add_buttons()
 
     def refresh(self):
-        self.panel.size = (350, 40*(len(self.bodies)+1))
+        self.panel.size = (350*WIDTH_SCALE, (40*(len(self.bodies)+1))*HEIGHT_SCALE)
         self.panel.clear()
         self.add_buttons()
 

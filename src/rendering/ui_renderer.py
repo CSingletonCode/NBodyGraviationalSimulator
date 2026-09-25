@@ -11,7 +11,6 @@ class UIRenderer:
         self.context = context
         self.screen_size = screen_size
         self.ui_scale = float(min(HEIGHT_SCALE, WIDTH_SCALE))
-        #self.font = pg.font.SysFont("Arial", int(20 * self.ui_scale), bold=True)
 
         pg.font.init()
 

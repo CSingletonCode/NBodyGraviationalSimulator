@@ -10,7 +10,7 @@ class Button(Element):
         self.label = label
         self.text_texture = None
         self.pressed = False
-        self.font = pg.font.SysFont("Arial", 20 * int(min(WIDTH_SCALE, HEIGHT_SCALE)), bold=True)
+        self.font = pg.font.SysFont("Arial", int(20 * float(min(WIDTH_SCALE, HEIGHT_SCALE))), bold=True)
         self.label_colour = tuple(255*c for c in label_colour)
         self.press_drop = True
 
