@@ -25,4 +25,4 @@ A Python based N-body gravitational simulation featuring a freely controllable c
 ## Technologies Used:
 - **Main Language**: Python
 - **Secondary Language**: GLSL
-- **Libraries**: PyGame, ModernGL, Numpy, Math, PyGLM
+- **Libraries**: PyGame, ModernGL, Numpy, Math, PyGLM, json
