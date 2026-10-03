@@ -11,3 +11,5 @@ A Python based N-body gravitational simulation featuring a freely controllable c
   - **SDF Styling**: UI elements make use of an SDF function for smooth edges, anti aliasing and rounded corners.
   - **Dynamic Sizing**: Uses the ratio of the active screen and 1440p to scale all UI elements to the correct size for the screen.
   - **Text Rendering**: Uses PyGame to create transparent surfaces with text on them, makes textures out of these surfaces to be added to textboxes.
+
+- Built from scratch UI features including buttons, panels and textboxes which can have labels, rounded edges and shadows. All custom made with ModernGL and glsl
