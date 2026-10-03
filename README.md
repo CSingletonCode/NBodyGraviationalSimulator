@@ -12,4 +12,11 @@ A Python based N-body gravitational simulation featuring a freely controllable c
   - **Dynamic Sizing**: Uses the ratio of the active screen and 1440p to scale all UI elements to the correct size for the screen.
   - **Text Rendering**: Uses PyGame to create transparent surfaces with text on them, makes textures out of these surfaces to be added to textboxes.
 
-- Built from scratch UI features including buttons, panels and textboxes which can have labels, rounded edges and shadows. All custom made with ModernGL and glsl
+- UI features built completely from scratch including buttons, panels and textboxes which can have labels, rounded edges and shadows. All custom made with ModernGL and glsl.
+
+- A Sandbox simulation using velocity verlet integration with:
+  - **Changeable Speed**: The user can change the speed multiplier of the simulation, with larger values causing the physics loop to be broken into steps, preventing bodies from flying away due to massive jumps.
+  - **Custom Bodies**: The user can enter their own celestial bodies where they can specify attributes such as spin, radius, density, tilt and initial velocity.
+  - **Pre-sets**: The user can choose to add several pre made bodies with attributes accurate to their real world counterparts, these include Mars, Earth, The moon and more. The XZ plane is treated as the plane of the ecliptic and all values are relative to it.
+
+- All planetary data is saved to JSON file on close and loaded when run again.
