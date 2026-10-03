@@ -14,8 +14,11 @@ class PresetDropdown:
         self.add_buttons()
 
     def add_buttons(self):
+        """Adds a button to load each defined body preset."""
         for i, preset in enumerate(self.presets.preset_list):
             def fill_values(preset=preset):
+                """Set each new body panel label to the necessary value, resetting the texture so they are rerendered.
+                   closes the panel and unfreezes the UI."""
                 self.nbp.name_box.label = preset["name"]
                 self.nbp.name_box.text_texture = None
                 self.nbp.type_box.label = preset["type"]

@@ -20,7 +20,7 @@ class NewBodyPanel:
         self.add_features()
 
     def add_features(self):
-        # Name
+        # Label and textbox for the bodies name
         self.name_label = TextBox(position=(681, 20), size=(100, 20), colour=(*SILVER, 1.0),
                                   border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                   label_colour=(*BLACK, 1.0), writable=False, label="Enter Name:")
@@ -31,7 +31,7 @@ class NewBodyPanel:
         self.panel.add_element(self.name_box)
         self.standard_data_boxes.append(self.name_box)
 
-        # Type of Body
+        # label and button for displaying the type dropdown to select the bodies type
         self.type_label = TextBox(position=(676, 92), size=(100, 20), colour=(*SILVER, 1.0),
                                   border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                   label_colour=(*BLACK, 1.0), writable=False, label="Enter Type:")
@@ -43,7 +43,7 @@ class NewBodyPanel:
         self.panel.add_element(self.type_box)
         self.standard_data_boxes.append(self.type_box)
 
-        # Parent Body
+        # label and button for displaying the parent dropdown to select the bodies parent
         self.parent_label = TextBox(position=(683, 164), size=(100, 20), colour=(*SILVER, 1.0),
                                     border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                     label_colour=(*BLACK, 1.0), writable=False, label="Enter Parent:")
@@ -54,7 +54,7 @@ class NewBodyPanel:
         self.parent_box.press_drop = False
         self.panel.add_element(self.parent_box)
 
-        # Density
+        # Label and textbox for setting the bodies density.
         self.density_label = TextBox(position=(1065, 20), size=(150, 20), colour=(*SILVER, 1.0),
                                      border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                      label_colour=(*BLACK, 1.0), writable=False, label="Density (kg/m³):")
@@ -65,7 +65,7 @@ class NewBodyPanel:
         self.panel.add_element(self.density_box)
         self.standard_data_boxes.append(self.density_box)
 
-        # Radius
+        # Label and textbox for setting the bodies radius, done in km not m so it's easier to enter.
         self.radius_label = TextBox(position=(1053, 92), size=(150, 20), colour=(*SILVER, 1.0),
                                     border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                     label_colour=(*BLACK, 1.0), writable=False, label="Radius (km):")
@@ -76,7 +76,7 @@ class NewBodyPanel:
         self.panel.add_element(self.radius_box)
         self.standard_data_boxes.append(self.radius_box)
 
-        # Angular Velocity
+        # Label and textbox for setting the rotational period of the body.
         self.spin_label = TextBox(position=(1071, 164), size=(150, 20), colour=(*SILVER, 1.0),
                                   border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                   label_colour=(*BLACK, 1.0), writable=False, label="Rotation Period (hrs)")
@@ -87,8 +87,7 @@ class NewBodyPanel:
         self.panel.add_element(self.spin_box)
         self.standard_data_boxes.append(self.spin_box)
 
-        # POSITION
-
+        # label and 3 textboxes for the bodies position relative to the parent, the boxes are for x, y and z respectively.
         self.pos_label = TextBox(position=(1470, 20), size=(410, 20), colour=(*SILVER, 1.0),
                                  border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                  label_colour=(*BLACK, 1.0), writable=False, label="Position Vector (km):")
@@ -110,8 +109,7 @@ class NewBodyPanel:
         self.panel.add_element(self.pos_z)
         self.position_boxes = (self.pos_x, self.pos_y, self.pos_z)
 
-        # VELOCITY
-
+        # label and 3 textboxes for the bodies velocity relative to the parent, the boxes are for x, y and z respectively.
         self.velocity_label = TextBox(position=(1470, 92), size=(410, 20), colour=(*SILVER, 1.0),
                                  border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                  label_colour=(*BLACK, 1.0), writable=False, label="Velocity Vector (km/s):")
@@ -133,8 +131,8 @@ class NewBodyPanel:
         self.panel.add_element(self.component_z)
         self.velocity_boxes = (self.component_x, self.component_y, self.component_z)
 
-        # TILT
 
+        # label and 3 boxes for setting the normalised tilt of the body, the boxes are for x, y and z respectively, each value is between -1 and 1.
         self.tilt_label = TextBox(position=(1470, 164), size=(410, 20), colour=(*SILVER, 1.0),
                                   border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                   label_colour=(*BLACK, 1.0), writable=False, label="Axial Tilt Vector (-1 to 1):")
@@ -156,8 +154,7 @@ class NewBodyPanel:
         self.panel.add_element(self.tilt_z)
         self.tilt_boxes = (self.tilt_x, self.tilt_y, self.tilt_z)
 
-        # Colour
-
+        # Label and 3 textboxes for setting the colour of the body, the colour is done with normalised rgb values.
         self.colour_label = TextBox(position=(1470, 236), size=(410, 20), colour=(*SILVER, 1.0),
                                   border_colour=(*SILVER, 1.0), corner_radius=0, border_size=0,
                                   label_colour=(*BLACK, 1.0), writable=False, label="Colour (0 - 1):")
@@ -179,32 +176,26 @@ class NewBodyPanel:
         self.panel.add_element(self.colour_z)
         self.colour_boxes = (self.colour_x, self.colour_y, self.colour_z)
 
-        # Load a preset
-
+        # Button to bring up the preset list.
         self.preset_button = Button(position=(1205, 312), size=(150, 50), purpose=None, colour=(*NAVY, 1.0),
                                     border_colour=(*CYAN, 1.0), corner_radius=7, border_size=2, label="SELECT PRESET",
                                     label_colour=(*CYAN, 1.0), enable_shadow=True)
         self.panel.add_element(self.preset_button)
 
-        # Control Buttons
-
+        # Removes any entered values and closes the panel.
         self.cancel_button = Button(position=(880, 312), size=(150, 50), purpose=self.clear_and_close, colour=(*NAVY, 1.0),
                                     border_colour=(*RED, 1.0), corner_radius=7, border_size=2, label="CANCEL",
                                     label_colour=(*RED, 1.0), enable_shadow=True)
         self.panel.add_element(self.cancel_button)
 
+        # Creates a new body with the entered values and closes the panel.
         self.enter_button = Button(position=(1530, 312), size=(150, 50), purpose=self.confirm_body, colour=(*NAVY, 1.0),
                                    border_colour=(*GREEN, 1.0), corner_radius=7, border_size=2, label="ENTER BODY",
                                    label_colour=(*GREEN, 1.0), enable_shadow=True)
         self.panel.add_element(self.enter_button)
 
-
     def clear_and_close(self):
-        def clear_box_group(tuples):
-            for vect_box in tuples:
-                vect_box.label = ""
-                vect_box.text_texture = None
-
+        """Clears the text in every box, closes the new body panel and unfreezes the controls."""
         for box in self.standard_data_boxes:
             box.label = ""
             box.text_texture = None
@@ -213,16 +204,22 @@ class NewBodyPanel:
         self.parent_box.text_texture = None
 
         for boxes in (self.position_boxes, self.velocity_boxes, self.tilt_boxes, self.colour_boxes):
-            clear_box_group(boxes)
+            for vect_box in boxes:
+                vect_box.label = ""
+                vect_box.text_texture = None
 
         self.unfreeze_features()
         self.panel.hide()
 
     def confirm_body(self):
+        """Checks all inputted data so any numbers are floats.
+           Displays the invalid data panel if validation fails
+           creates a new body if it succeeds."""
         validation_failed = False
 
         def validate(box):
-            nonlocal validation_failed
+            """Tries to turn every number box into a float"""
+            nonlocal validation_failed # Sets the function to use the external validation-failed.
             data = box.label
             if data == "":
                 validation_failed = True
@@ -274,6 +271,7 @@ class NewBodyPanel:
         self.clear_and_close()
 
     def calculate_world_position(self, parent, local_position):
+        """Returns the bodies relative position plus it's parents position if it has one."""
         pos = np.array(local_position, dtype=np.float64)
         if parent is not None and not isinstance(parent, str):
             parent_pos = np.array(parent.position, dtype=np.float64)
@@ -281,6 +279,7 @@ class NewBodyPanel:
         return pos
 
     def calculate_world_velocity(self, parent, local_velocity):
+        """Returns the bodies relative velocity plus it's parents velocity if it has one."""
         vel = np.array(local_velocity, dtype=np.float64)
         if parent is not None and not isinstance(parent, str):
             parent_vel = np.array(parent.velocity, dtype=np.float64)
@@ -288,10 +287,12 @@ class NewBodyPanel:
         return vel
 
     def calculate_angular_velocity(self, rotation_period):
+        """Calculates the radians per second from the rotation period in hrs."""
         v = ( 2.0 * np.pi ) / (3600.0 * rotation_period)
         return v
 
     def calculate_mass(self, density, radius):
+        """Calculates the mass of the bodies in kilograms."""
         volume = (4.0 / 3.0) * np.pi * ((radius * 1000.0) ** 3)
         mass = volume * density
         return mass

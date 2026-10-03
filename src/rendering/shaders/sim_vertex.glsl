@@ -1,17 +1,23 @@
 #version 330
 
+// vertex position and its normal recieved from the buffers.
 in vec3 in_position;
 in vec3 in_normal;
 
-uniform mat4 m_proj;
-uniform mat4 m_view;
-uniform mat4 m_model;
+// The matrices used to move the vertex from world space into screen space.
+uniform mat4 projection_matrix;
+uniform mat4 view_matrix;
+uniform mat4 model_matrix;
 
+// The values passed on to the fragment shader.
 out vec3 local_position;
 out vec3 frag_normal;
 
 void main() {
+    // base positions are passed straight through
     local_position = in_position;
-    frag_normal = mat3(m_view * m_model) * in_normal;
-    gl_Position = m_proj * m_view * m_model * vec4(in_position, 1.0);
+    // 4th row and coloumn removed from the matrics so translation doesn't change the normals.
+    frag_normal = mat3(view_matrix * model_matrix) * in_normal;
+    // Transforms the vertex from local space, to world space, to view space and then clip space.
+    gl_Position = projection_matrix * view_matrix * model_matrix * vec4(in_position, 1.0);
 }

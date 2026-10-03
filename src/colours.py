@@ -1,3 +1,4 @@
+# Normalised RGB values for commonly used colours
 WHITE = (1.0, 1.0, 1.0)
 BLACK = (0.0, 0.0, 0.0)
 DARKBLUE = (0.0, 0.0, 0.08)

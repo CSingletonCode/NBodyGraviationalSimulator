@@ -6,7 +6,7 @@ class Panel(Element):
         super().__init__(position, size, colour, border_colour, corner_radius, border_size, enable_shadow)
         self.text_texture = None
         self.pressed = False
-        self.contains = []
+        self.contains = [] # Elements placed on the panel, main loop methods called on a panel are passed to its children.
 
     def add_element(self, element):
         self.contains.append(element)

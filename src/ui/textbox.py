@@ -7,10 +7,10 @@ class TextBox(Element):
     def __init__(self, position, size, colour, border_colour, label_colour, corner_radius, border_size,  writable, enable_shadow=False, label=""):
         super().__init__(position, size, colour, border_colour, corner_radius, border_size, enable_shadow)
         self.label = label
-        self.label_colour = tuple(255*c for c in label_colour)
-        self.writable = writable
+        self.label_colour = tuple(255*colour for colour in label_colour) # Converts normalised RGB to 8-bit RGB scale
+        self.writable = writable # Sets the textbox as a static label or a writable box
         self.font_name = "Arial"
-        self.label_size = int(20 * float(min(WIDTH_SCALE, HEIGHT_SCALE)))
+        self.label_size = int(20 * float(min(WIDTH_SCALE, HEIGHT_SCALE))) # Scales the text size with the resolution
         self.bold = True
         self.font = pg.font.SysFont(self.font_name, self.label_size, self.bold)
         self.pressed = False
@@ -18,12 +18,15 @@ class TextBox(Element):
         self.limit = self.size[0] - self.border_size*2 - 10
 
     def update(self, mouse_position):
+        """Determines if the mouse is over the button."""
         if not self.enabled:
             self.hovered = False
             return
         self.hovered = self.rect.collidepoint(mouse_position)
 
     def handle_event(self, event):
+        """Handles the pressing and releasing of the button.
+           Sets the focus flag so the box can be written to."""
         if self.enabled:
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1 and self.hovered:
@@ -37,6 +40,7 @@ class TextBox(Element):
                     self.pressed = False
 
     def write(self, event):
+        """Writes user input into the boxes label"""
         if not self.writable or not self.focused:
             return
         if event.key == pg.K_BACKSPACE:
@@ -47,7 +51,7 @@ class TextBox(Element):
             proposed_label = self.label + event.unicode
             if self.limit >= self.font.size(proposed_label)[0]:
                 self.label = proposed_label
-        self.text_texture = None
+        self.text_texture = None # Resets the texture so the new label can be rendered
 
     def draw(self, renderer):
         renderer.draw_basics(self)

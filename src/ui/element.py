@@ -1,5 +1,5 @@
-from constants import *
-
+from constants import WIDTH_SCALE, HEIGHT_SCALE
+import pygame as pg
 
 class Element:
     def __init__(self, position, size, colour, border_colour, corner_radius, border_size, enable_shadow):
@@ -10,7 +10,7 @@ class Element:
         self.border_colour = border_colour
         self.corner_radius = corner_radius
         self.border_size = border_size
-        self.rect = pg.Rect(self.position[0], self.position[1], self.size[0], self.size[1])
+        self.rect = pg.Rect(self.position[0], self.position[1], self.size[0], self.size[1]) # Pygame rect used for easy collision detection
         self.enable_shadow = enable_shadow
         self.text_texture = None
         self.press_drop = False
