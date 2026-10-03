@@ -18,5 +18,11 @@ A Python based N-body gravitational simulation featuring a freely controllable c
   - **Changeable Speed**: The user can change the speed multiplier of the simulation, with larger values causing the physics loop to be broken into steps, preventing bodies from flying away due to massive jumps.
   - **Custom Bodies**: The user can enter their own celestial bodies where they can specify attributes such as spin, radius, density, tilt and initial velocity.
   - **Pre-sets**: The user can choose to add several pre made bodies with attributes accurate to their real world counterparts, these include Mars, Earth, The moon and more. The XZ plane is treated as the plane of the ecliptic and all values are relative to it.
+  - **Orbit Trails**: The user can choose to display the orbit paths of each body as a thin white circle.
 
 - All planetary data is saved to JSON file on close and loaded when run again.
+
+## Technologies Used:
+- **Main Language**: Python
+- **Secondary Language**: GLSL
+- **Libraries**: PyGame, ModernGL, Numpy, Math, PyGLM
