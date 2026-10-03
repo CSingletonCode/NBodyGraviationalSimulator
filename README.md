@@ -4,4 +4,5 @@ A Python based N-body gravitational simulation featuring a freely controllable c
 
 ## Features:
 - A fully moveable camera with two modes:
-  - **Locked**: Follows one body, can be rotated around the body and zoomed in and out.
+  - **Locked**: Follows one body, can be rotated around the body by clicking and dragging, and zoomed in and out with the mouse wheel.
+  - **free**: Able to move around the simulation as a whole, uses WASD to slide up, down, left and right, clicking and dragging rotates the camera around and the mouse wheel moves it forwards and backwards.
